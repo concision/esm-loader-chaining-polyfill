@@ -1,0 +1,8 @@
+{
+  "name": "esm-pipeline-loader",
+  "version": "0.1.0",
+  "description": "Enable multiple Node.js ESM \"--experimental-loader\"s via a chained pipeline",
+  "license": "MIT",
+  "repository": "https://github.com/concision/esm-pipeline-loader",
+  "author": "Concision <contact@concision.me>"
+}
