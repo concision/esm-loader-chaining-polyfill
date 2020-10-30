@@ -4,6 +4,5 @@
   "description": "Enable chaining multiple Node.js ESM '--experimental-loader's",
   "license": "MIT",
   "repository": "https://github.com/concision/esm-pipeline-loader",
-  "author": "Concision <contact@concision.me>",
-  "main": "index.mjs"
+  "author": "Concision <contact@concision.me>"
 }
