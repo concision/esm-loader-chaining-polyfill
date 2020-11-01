@@ -16,6 +16,7 @@ export declare namespace EsmLoaderChaining {
 
     export type Format = "builtin" | "commonjs" | "json" | "module" | "wasm";
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     export interface FormatContext {
     }
 
