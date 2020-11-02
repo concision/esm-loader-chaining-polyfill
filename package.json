@@ -12,7 +12,7 @@
     ".": "./esm-loader-chaining.js"
   },
   "scripts": {
-    "lint": "eslint --config .eslintrc.cjs --ext .ts --color .eslintrc.cjs src",
+    "lint": "eslint --config .eslintrc.json --ext .ts --color .eslintrc.json src",
     "build": "gulp build"
   },
   "devDependencies": {
