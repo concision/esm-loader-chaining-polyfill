@@ -56,7 +56,7 @@ export class Gulpfile {
      */
     @gulpclass.Task("lint")
     public lintTask(): void {
-        return run("npm run lint", {cwd: __dirname, verbosity: 3}).exec();
+        return run("yarn run lint", {cwd: __dirname, verbosity: 3}).exec();
     }
 
     /**
