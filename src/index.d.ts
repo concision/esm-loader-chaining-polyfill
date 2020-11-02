@@ -1,4 +1,20 @@
-export function getGlobalPreloadCode(): string;
+// source: https://stackoverflow.com/a/63790089
+export type OptionalTail<T extends any[]> = T extends [ ...infer H, any? ] ? H : any[];
+export type OptionalTailParameter<T extends (...args: any) => any> = (...args: OptionalTail<Parameters<T>>) => ReturnType<T>;
+
+
+export interface EsmLoaderHook {
+    getGlobalPreloadCode?: GlobalPreloadCodeHook;
+    resolve?: ResolveHook;
+    getFormat?: ModuleFormatHook;
+    getSource?: SourceHook;
+    transformSource?: TransformSourceHook;
+}
+
+
+export interface GlobalPreloadCodeHook {
+    (): string;
+}
 
 
 export interface ResolveContext {
@@ -10,37 +26,42 @@ export interface ResolveResult {
     url: string;
 }
 
-export function resolve(specifier: string, context: ResolveContext, nextResolve: typeof resolve): Promise<ResolveResult>;
-
-
-export type Format = "builtin" | "commonjs" | "json" | "module" | "wasm";
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface FormatContext {
+export interface ResolveHook {
+    (specifier: string, context: ResolveContext, nextResolve: OptionalTailParameter<ResolveHook>): Promise<ResolveResult>;
 }
 
-export interface FormatResult {
-    format: Format;
+
+export type ModuleFormat = "builtin" | "commonjs" | "json" | "module" | "wasm";
+
+export interface ModuleFormatContext {
 }
 
-export function getFormat(url: string, context: FormatContext, nextFormat: typeof getFormat): Promise<FormatResult>;
+export interface ModuleFormatResult {
+    format: ModuleFormat;
+}
+
+export interface ModuleFormatHook {
+    (url: string, context: ModuleFormatContext, nextFormat: OptionalTailParameter<ModuleFormatHook>): Promise<ModuleFormatResult>
+}
 
 
 export type Source = string | SharedArrayBuffer | Uint8Array;
 
 export interface SourceContext {
-    format: Format;
+    format: ModuleFormat;
 }
 
 export interface SourceResult {
     source: Source;
 }
 
-export function getSource(url: string, context: SourceContext, nextSource: typeof getSource): Promise<SourceResult>;
+export interface SourceHook {
+    (url: string, context: SourceContext, nextSource: OptionalTailParameter<SourceHook>): Promise<SourceResult>;
+}
 
 
 export interface TransformSourceContext {
-    format: Format;
+    format: ModuleFormat;
     url: string;
 }
 
@@ -48,4 +69,6 @@ export interface TransformSourceResult {
     source: Source;
 }
 
-export function transformSource(source: Source, context: TransformSourceContext, nextTransformSource: typeof transformSource): Promise<TransformSourceResult>;
+export interface TransformSourceHook {
+    (source: Source, context: TransformSourceContext, nextTransformSource: OptionalTailParameter<TransformSourceHook>): Promise<TransformSourceResult>
+}
