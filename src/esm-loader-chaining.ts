@@ -1,9 +1,9 @@
 import {
+    EsmLoaderHook,
     GlobalPreloadCodeHook,
     ModuleFormatContext,
     ModuleFormatHook,
     ModuleFormatResult,
-    RemovedTailParameter,
     ResolveContext,
     ResolveHook,
     ResolveResult,
@@ -19,7 +19,7 @@ import {
 // test top level await
 let topLevelAwaitEnabled = false;
 try {
-    eval("await Promise.resolve();");
+    eval(`await Promise.resolve();`);
     topLevelAwaitEnabled = true;
 } catch (ignored) {
     process.emitWarning("--experimental-top-level-await or --harmony-top-level-await must be specified to support the getGlobalPreloadCode hook");
@@ -41,13 +41,24 @@ for (let i = 0; i < process.execArgv.length; i++) {
     }
 }
 
+
+// checks
+let noopLoader = false;
+// if this ESM loader is not the last loader in the list, but is still somehow loaded, ESM loader chaining must be supported in this node version
+// therefore, all operations should no-op to not reduplicate calls
+if (loaderNames[loaderNames.length - 1] !== "esm-loader-chaining") {
+    noopLoader = true;
+}
+// TODO: check if the current version has nodejs/node#33812 merged, and no-op if so
+
+
 // resolve
-const loaders: any[] = [];
-const loaderPromise = new Promise(async (resolve, reject) => {
+const esmLoaders: EsmLoaderHook[] = [];
+const importEsmLoadersPromise: Promise<EsmLoaderHook[]> = new Promise(async (resolve, reject) => {
     try {
         for (const loaderName of loaderNames) {
             if (loaderName !== "esm-loader-chaining") {
-                loaders.push(await import(loaderName));
+                esmLoaders.push(await import(loaderName));
             }
         }
         resolve();
@@ -56,15 +67,12 @@ const loaderPromise = new Promise(async (resolve, reject) => {
     }
 });
 
-if (topLevelAwaitEnabled) {
-    eval("await loaderPromise;");
+
+if (!noopLoader && topLevelAwaitEnabled) {
+    eval(`await importEsmLoadersPromise;`);
 }
-
-
 export const getGlobalPreloadCode: GlobalPreloadCodeHook = (): string => {
-    if (!topLevelAwaitEnabled) {
-        return "";
-    }
+    if (noopLoader || !topLevelAwaitEnabled) return "";
 
     return ``;
 };
@@ -72,51 +80,51 @@ export const getGlobalPreloadCode: GlobalPreloadCodeHook = (): string => {
 export const resolve: ResolveHook = async (
     specifier: string,
     context: ResolveContext,
-    nextResolve: RemovedTailParameter<ResolveHook>,
+    nextResolve: ResolveHook,
 ): Promise<ResolveResult> => {
-    // await until all loaders are resolved
-    if (!topLevelAwaitEnabled) {
-        await loaderPromise;
-    }
+    if (noopLoader) return await nextResolve(specifier, context, nextResolve);
 
-    return nextResolve(specifier, context);
+    // await until all loaders are resolved
+    if (!topLevelAwaitEnabled) await importEsmLoadersPromise;
+
+    return nextResolve(specifier, context, nextResolve);
 };
 
 export const getFormat: ModuleFormatHook = async (
     url: string,
     context: ModuleFormatContext,
-    nextFormat: RemovedTailParameter<ModuleFormatHook>,
+    nextFormat: ModuleFormatHook,
 ): Promise<ModuleFormatResult> => {
-    // await until all loaders are resolved
-    if (!topLevelAwaitEnabled) {
-        await loaderPromise;
-    }
+    if (noopLoader) return await nextFormat(url, context, nextFormat);
 
-    return await nextFormat(url, context);
+    // await until all loaders are resolved
+    if (!topLevelAwaitEnabled) await importEsmLoadersPromise;
+
+    return await nextFormat(url, context, nextFormat);
 };
 
 export const getSource: SourceHook = async (
     url: string,
     context: SourceContext,
-    nextSource: RemovedTailParameter<SourceHook>,
+    nextSource: SourceHook,
 ): Promise<SourceResult> => {
-    // await until all loaders are resolved
-    if (!topLevelAwaitEnabled) {
-        await loaderPromise;
-    }
+    if (noopLoader) return await nextSource(url, context, nextSource);
 
-    return await nextSource(url, context);
+    // await until all loaders are resolved
+    if (!topLevelAwaitEnabled) await importEsmLoadersPromise;
+
+    return await nextSource(url, context, nextSource);
 };
 
 export const transformSource: TransformSourceHook = async (
     source: Source,
     context: TransformSourceContext,
-    nextTransformSource: RemovedTailParameter<TransformSourceHook>,
+    nextTransformSource: TransformSourceHook,
 ): Promise<TransformSourceResult> => {
-    // await until all loaders are resolved
-    if (!topLevelAwaitEnabled) {
-        await loaderPromise;
-    }
+    if (noopLoader) return await nextTransformSource(source, context, nextTransformSource);
 
-    return await nextTransformSource(source, context);
+    // await until all loaders are resolved
+    if (!topLevelAwaitEnabled) await importEsmLoadersPromise;
+
+    return await nextTransformSource(source, context, nextTransformSource);
 };
