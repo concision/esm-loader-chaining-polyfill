@@ -106,7 +106,6 @@ export class Gulpfile {
         const packageJson = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf8"));
 
         // delete unnecessary tags
-        delete packageJson["type"];
         delete packageJson["scripts"];
         delete packageJson["devDependencies"];
 
