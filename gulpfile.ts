@@ -1,14 +1,18 @@
 import gulp from "gulp";
-import {Gulpclass, SequenceTask, Task} from "gulpclass";
+import gulpclass from "gulpclass";
 import typescript, {Project} from "gulp-typescript";
 import del from "del";
 import run from "gulp-run";
 import {resolve} from "path";
 import {readFileSync, writeFileSync} from "fs";
+import path from 'path';
+import {URL} from "url";
 
-@Gulpclass()
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-class Gulpfile {
+// source: https://stackoverflow.com/a/53582084
+const __dirname = path.join(path.dirname(decodeURI(new URL(import.meta.url).pathname))).replace(/^\\([A-Z]:\\)/, "$1")
+
+@gulpclass.Gulpclass()
+export class Gulpfile {
     // TypeScript project definitions
 
     /**
@@ -29,12 +33,12 @@ class Gulpfile {
     private readonly target: string = resolve(__dirname, this.project.config.compilerOptions.outDir);
 
 
-    // build
+    // tasks
 
     /**
      * Build project
      */
-    @SequenceTask("build")
+    @gulpclass.SequenceTask("build")
     public buildTask(): string[] {
         return ["clean", "lint", "transpile", "includes", "package"];
     }
@@ -42,7 +46,7 @@ class Gulpfile {
     /**
      * Delete {@link target} directory
      */
-    @Task("clean")
+    @gulpclass.Task("clean")
     public cleanTask(): Promise<unknown> {
         return del(this.target);
     }
@@ -50,7 +54,7 @@ class Gulpfile {
     /**
      * Lint source files
      */
-    @Task("lint")
+    @gulpclass.Task("lint")
     public lintTask(): void {
         return run("npm run lint", {cwd: __dirname, verbosity: 3}).exec();
     }
@@ -58,7 +62,7 @@ class Gulpfile {
     /**
      * Transpile TypeScript project sources
      */
-    @Task("transpile")
+    @gulpclass.Task("transpile")
     public transpileTask(): unknown {
         const sources: string[] = [
             // included files, if specified
@@ -79,7 +83,7 @@ class Gulpfile {
     /**
      * Copy other files to distributed files
      */
-    @Task("includes")
+    @gulpclass.Task("includes")
     public includeTask(): unknown {
         return Promise.all([
             // add README.md and LICENSE
@@ -87,7 +91,7 @@ class Gulpfile {
                 // write to target build directory
                 .pipe(gulp.dest(this.target)),
             // add module typings
-            gulp.src(["**/typings/index.d.ts"], {base: resolve(this.root, "typings")})
+            gulp.src(["**/index.d.ts"], {base: this.root})
                 // write to target build directory
                 .pipe(gulp.dest(this.target)),
         ]);
@@ -96,7 +100,7 @@ class Gulpfile {
     /**
      * Copy stripped package.json to distributed files
      */
-    @Task("package")
+    @gulpclass.Task("package")
     public async packageTask(): Promise<void> {
         // read package.json
         const packageJson = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf8"));

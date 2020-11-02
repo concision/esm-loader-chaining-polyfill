@@ -12,8 +12,8 @@
     ".": "./esm-loader-chaining.js"
   },
   "scripts": {
-    "lint": "eslint --config .eslintrc.json --ext .ts --color .eslintrc.json src",
-    "build": "gulp build"
+    "lint": "eslint --config .eslintrc --ext .ts --color .eslintrc src",
+    "build": "gulp --no-warnings --loader=ts-node/esm build"
   },
   "devDependencies": {
     "@types/del": "^4.0.0",
