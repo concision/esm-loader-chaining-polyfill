@@ -1,12 +1,18 @@
 import {
-    FormatContext,
-    FormatResult,
+    GlobalPreloadCodeHook,
+    ModuleFormatContext,
+    ModuleFormatHook,
+    ModuleFormatResult,
+    RemovedTailParameter,
     ResolveContext,
+    ResolveHook,
     ResolveResult,
     Source,
     SourceContext,
+    SourceHook,
     SourceResult,
     TransformSourceContext,
+    TransformSourceHook,
     TransformSourceResult,
 } from "./index";
 
@@ -55,29 +61,62 @@ if (topLevelAwaitEnabled) {
 }
 
 
-export function getGlobalPreloadCode(): string {
+export const getGlobalPreloadCode: GlobalPreloadCodeHook = (): string => {
     if (!topLevelAwaitEnabled) {
-        return ``;
+        return "";
     }
+
     return ``;
-}
+};
 
-export async function resolve(specifier: string, context: ResolveContext, nextResolve: typeof resolve): Promise<ResolveResult> {
-    if (!topLevelAwaitEnabled) await loaderPromise;
-    return nextResolve(specifier, context, nextResolve);
-}
+export const resolve: ResolveHook = async (
+    specifier: string,
+    context: ResolveContext,
+    nextResolve: RemovedTailParameter<ResolveHook>,
+): Promise<ResolveResult> => {
+    // await until all loaders are resolved
+    if (!topLevelAwaitEnabled) {
+        await loaderPromise;
+    }
 
-export async function getFormat(url: string, context: FormatContext, nextFormat: typeof getFormat): Promise<FormatResult> {
-    if (!topLevelAwaitEnabled) await loaderPromise;
-    return await nextFormat(url, context, nextFormat);
-}
+    return nextResolve(specifier, context);
+};
 
-export async function getSource(url: string, context: SourceContext, nextSource: typeof getSource): Promise<SourceResult> {
-    if (!topLevelAwaitEnabled) await loaderPromise;
-    return await nextSource(url, context, nextSource);
-}
+export const getFormat: ModuleFormatHook = async (
+    url: string,
+    context: ModuleFormatContext,
+    nextFormat: RemovedTailParameter<ModuleFormatHook>,
+): Promise<ModuleFormatResult> => {
+    // await until all loaders are resolved
+    if (!topLevelAwaitEnabled) {
+        await loaderPromise;
+    }
 
-export async function transformSource(source: Source, context: TransformSourceContext, nextTransformSource: typeof transformSource): Promise<TransformSourceResult> {
-    if (!topLevelAwaitEnabled) await loaderPromise;
-    return await nextTransformSource(source, context, nextTransformSource);
-}
+    return await nextFormat(url, context);
+};
+
+export const getSource: SourceHook = async (
+    url: string,
+    context: SourceContext,
+    nextSource: RemovedTailParameter<SourceHook>,
+): Promise<SourceResult> => {
+    // await until all loaders are resolved
+    if (!topLevelAwaitEnabled) {
+        await loaderPromise;
+    }
+
+    return await nextSource(url, context);
+};
+
+export const transformSource: TransformSourceHook = async (
+    source: Source,
+    context: TransformSourceContext,
+    nextTransformSource: RemovedTailParameter<TransformSourceHook>,
+): Promise<TransformSourceResult> => {
+    // await until all loaders are resolved
+    if (!topLevelAwaitEnabled) {
+        await loaderPromise;
+    }
+
+    return await nextTransformSource(source, context);
+};

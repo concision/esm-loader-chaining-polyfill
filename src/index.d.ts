@@ -1,6 +1,6 @@
 // source: https://stackoverflow.com/a/63790089
-export type OptionalTail<T extends any[]> = T extends [ ...infer H, any? ] ? H : any[];
-export type OptionalTailParameter<T extends (...args: any) => any> = (...args: OptionalTail<Parameters<T>>) => ReturnType<T>;
+export type RemoveLastElement<T extends any[]> = T extends [ ...infer H, any ] ? H : any[];
+export type RemovedTailParameter<T extends (...args: any) => any> = (...args: RemoveLastElement<Parameters<T>>) => ReturnType<T>;
 
 
 export interface EsmLoaderHook {
@@ -27,7 +27,7 @@ export interface ResolveResult {
 }
 
 export interface ResolveHook {
-    (specifier: string, context: ResolveContext, nextResolve: OptionalTailParameter<ResolveHook>): Promise<ResolveResult>;
+    (specifier: string, context: ResolveContext, nextResolve: RemovedTailParameter<ResolveHook>): Promise<ResolveResult>;
 }
 
 
@@ -41,7 +41,7 @@ export interface ModuleFormatResult {
 }
 
 export interface ModuleFormatHook {
-    (url: string, context: ModuleFormatContext, nextFormat: OptionalTailParameter<ModuleFormatHook>): Promise<ModuleFormatResult>
+    (url: string, context: ModuleFormatContext, nextFormat: RemovedTailParameter<ModuleFormatHook>): Promise<ModuleFormatResult>
 }
 
 
@@ -56,7 +56,7 @@ export interface SourceResult {
 }
 
 export interface SourceHook {
-    (url: string, context: SourceContext, nextSource: OptionalTailParameter<SourceHook>): Promise<SourceResult>;
+    (url: string, context: SourceContext, nextSource: RemovedTailParameter<SourceHook>): Promise<SourceResult>;
 }
 
 
@@ -70,5 +70,5 @@ export interface TransformSourceResult {
 }
 
 export interface TransformSourceHook {
-    (source: Source, context: TransformSourceContext, nextTransformSource: OptionalTailParameter<TransformSourceHook>): Promise<TransformSourceResult>
+    (source: Source, context: TransformSourceContext, nextTransformSource: RemovedTailParameter<TransformSourceHook>): Promise<TransformSourceResult>
 }
