@@ -2,12 +2,18 @@
   "name": "esm-loader-chaining",
   "version": "0.1.0",
   "description": "Enable chaining multiple Node.js ESM '--experimental-loader's",
+  "author": "Concision <contact@concision.me>",
   "license": "MIT",
   "repository": "https://github.com/concision/esm-pipeline-loader",
-  "author": "Concision <contact@concision.me>",
   "type": "module",
+  "main": "esm-loader-chaining.js",
+  "typings": "index.d.ts",
+  "exports": {
+    ".": "./esm-loader-chaining.js"
+  },
   "scripts": {
-    "lint": "eslint --config .eslintrc.cjs --ext .ts --color .eslintrc.cjs src"
+    "lint": "eslint --config .eslintrc.cjs --ext .ts --color .eslintrc.cjs src",
+    "build": "gulp build"
   },
   "devDependencies": {
     "@types/del": "^4.0.0",
