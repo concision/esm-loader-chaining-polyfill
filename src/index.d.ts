@@ -11,7 +11,7 @@ export declare namespace EsmLoaderChaining {
         url: string;
     }
 
-    export async function resolve(specifier: string, context: ResolveContext, nextResolve: typeof resolve): Promise<ResolveResult>;
+    export function resolve(specifier: string, context: ResolveContext, nextResolve: typeof resolve): Promise<ResolveResult>;
 
 
     export type Format = "builtin" | "commonjs" | "json" | "module" | "wasm";
@@ -24,7 +24,7 @@ export declare namespace EsmLoaderChaining {
         format: Format;
     }
 
-    export async function getFormat(url: string, context: FormatContext, nextFormat: typeof getFormat): Promise<FormatResult>;
+    export function getFormat(url: string, context: FormatContext, nextFormat: typeof getFormat): Promise<FormatResult>;
 
 
     export type Source = string | SharedArrayBuffer | Uint8Array;
@@ -37,7 +37,7 @@ export declare namespace EsmLoaderChaining {
         source: Source;
     }
 
-    export async function getSource(url: string, context: SourceContext, nextSource: typeof getSource): Promise<SourceResult>;
+    export function getSource(url: string, context: SourceContext, nextSource: typeof getSource): Promise<SourceResult>;
 
 
     export interface TransformSourceContext {
@@ -49,5 +49,5 @@ export declare namespace EsmLoaderChaining {
         source: Source;
     }
 
-    export async function transformSource(source: Source, context: TransformSourceContext, nextTransformSource: typeof transformSource): Promise<TransformSourceResult>;
+    export function transformSource(source: Source, context: TransformSourceContext, nextTransformSource: typeof transformSource): Promise<TransformSourceResult>;
 }
