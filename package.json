@@ -10,10 +10,12 @@
     "lint": "eslint --config .eslintrc.cjs --ext .ts --color .eslintrc.cjs src"
   },
   "devDependencies": {
+    "@types/del": "^4.0.0",
     "@types/gulp": "^4.0.7",
     "@types/node": "^14.14.6",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
+    "del": "^6.0.0",
     "eslint": "^7.12.1",
     "gulp": "^4.0.2",
     "gulpclass": "^0.2.0",
