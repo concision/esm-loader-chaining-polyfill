@@ -3,13 +3,12 @@ import gulpclass from "gulpclass";
 import typescript, {Project} from "gulp-typescript";
 import del from "del";
 import run from "gulp-run";
-import {resolve} from "path";
+import path, {resolve} from "path";
 import {readFileSync, writeFileSync} from "fs";
-import path from 'path';
 import {URL} from "url";
 
 // source: https://stackoverflow.com/a/53582084
-const __dirname = path.join(path.dirname(decodeURI(new URL(import.meta.url).pathname))).replace(/^\\([A-Z]:\\)/, "$1")
+const __dirname = path.join(path.dirname(decodeURI(new URL(import.meta.url).pathname))).replace(/^\\([A-Z]:\\)/, "$1");
 
 @gulpclass.Gulpclass()
 export class Gulpfile {
@@ -34,6 +33,14 @@ export class Gulpfile {
 
 
     // tasks
+
+    /**
+     * Build project without linting
+     */
+    @gulpclass.SequenceTask("build:dev")
+    public buildDevTask(): string[] {
+        return ["clean", "transpile", "includes", "package"];
+    }
 
     /**
      * Build project
