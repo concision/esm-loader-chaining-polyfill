@@ -17,14 +17,17 @@ import {
 } from "./index";
 import {ERR_INVALID_RETURN_VALUE} from "./internal/Errors";
 
+
 // test top level await
 let isTopLevelAwaitEnabled = false;
 try {
+    // if top-level await is not supported, parsing errors will occur with 'await' keyword
     eval(`await Promise.resolve();`);
     isTopLevelAwaitEnabled = true;
 } catch (ignored) {
     process.emitWarning("--experimental-top-level-await or --harmony-top-level-await must be specified to support the getGlobalPreloadCode hook");
 }
+
 
 // parse loaders
 const loaderNames: string[] = [];
@@ -50,47 +53,84 @@ let noopLoader = false;
 if (loaderNames[loaderNames.length - 1] !== "esm-loader-chaining") {
     noopLoader = true;
 }
-// TODO: check if the current version has nodejs/node#33812 merged, and no-op if so
+// TODO: no-op if the current version has nodejs/node#33812 merged
 
 
-// resolve
-const esmLoaders: EsmLoaderHook[] = [];
-const importEsmLoadersPromise: Promise<EsmLoaderHook[]> = new Promise(async (resolve, reject) => {
+// extracted loader hooks
+const globalPreloadCodeHooks: GlobalPreloadCodeHook[] = [];
+const resolveHooks: ResolveHook[] = [];
+const moduleFormatHooks: ModuleFormatHook[] = [];
+const sourceHooks: SourceHook[] = [];
+const transformSourceHooks: TransformSourceHook[] = [];
+
+// initialize all ESM loaders and extract hooks
+const initializationPromise: Promise<never> = new Promise(async (resolve, reject) => {
     try {
+        // import all ESM loaders
+        const esmLoaders: EsmLoaderHook[] = [];
         for (const loaderName of loaderNames) {
             if (loaderName !== "esm-loader-chaining") {
                 esmLoaders.push(await import(loaderName));
             }
         }
+
+        // extract all hooks
+        for (const esmLoader of esmLoaders) {
+            const globalPreloadCodeHook: unknown = esmLoader.getGlobalPreloadCode;
+            if (typeof globalPreloadCodeHook === "function") {
+                globalPreloadCodeHooks.push(<GlobalPreloadCodeHook>globalPreloadCodeHook);
+            }
+
+            const resolveHook: unknown = esmLoader.resolve;
+            if (typeof resolveHook === "function") {
+                resolveHooks.push(<ResolveHook>resolveHook);
+            }
+
+            const moduleFormatHook: unknown = esmLoader.getFormat;
+            if (typeof moduleFormatHook === "function") {
+                moduleFormatHooks.push(<ModuleFormatHook>moduleFormatHook);
+            }
+
+            const sourceHook: unknown = esmLoader.getSource;
+            if (typeof sourceHook === "function") {
+                sourceHooks.push(<SourceHook>sourceHook);
+            }
+
+            const transformSourceHook: unknown = esmLoader.transformSource;
+            if (typeof transformSourceHook === "function") {
+                transformSourceHooks.push(<TransformSourceHook>transformSourceHook);
+            }
+        }
+
         resolve();
     } catch (exception) {
         reject(exception);
     }
 });
 
-
+// if possible, await until all ESM loader hooks are collected
 if (!noopLoader && isTopLevelAwaitEnabled) {
-    eval(`await importEsmLoadersPromise;`);
+    eval(`await initializationPromise;`);
 }
+
+
 export const getGlobalPreloadCode: GlobalPreloadCodeHook = (): string => {
+    // unable to generate preload code; return nothing
     if (noopLoader || !isTopLevelAwaitEnabled) return "";
 
     const preloadCodeList: string[] = [];
     // retrieve global preload code from all hooks
-    for (const esmLoader of esmLoaders) {
-        const globalPreloadCodeHook: unknown = esmLoader.getGlobalPreloadCode;
-        if (typeof globalPreloadCodeHook === "function") {
-            // set 'this' to null and invoke to retrieve preload code
-            const preloadCode: unknown = globalPreloadCodeHook.bind(null)();
-            // ignore null return values
-            if (preloadCode !== null) {
-                // validate preload return value
-                if (typeof preloadCode !== "string") {
-                    throw new ERR_INVALID_RETURN_VALUE("string", "loader getGlobalPreloadCode", preloadCode);
-                }
-                // add global preload code to list
-                preloadCodeList.push(preloadCode);
+    for (const globalPreloadCodeHook of globalPreloadCodeHooks) {
+        // set 'this' to null and invoke to retrieve preload code
+        const preloadCode: unknown = globalPreloadCodeHook.bind(null)();
+        // ignore null return values
+        if (preloadCode !== null) {
+            // validate preload return value
+            if (typeof preloadCode !== "string") {
+                throw new ERR_INVALID_RETURN_VALUE("string", "loader getGlobalPreloadCode", preloadCode);
             }
+            // add global preload code to list
+            preloadCodeList.push(preloadCode);
         }
     }
 
@@ -112,7 +152,7 @@ export const resolve: ResolveHook = async (
     if (noopLoader) return await nextResolve(specifier, context, nextResolve);
 
     // await until all loaders are resolved
-    if (!isTopLevelAwaitEnabled) await importEsmLoadersPromise;
+    if (!isTopLevelAwaitEnabled) await initializationPromise;
 
     return nextResolve(specifier, context, nextResolve);
 };
@@ -125,7 +165,7 @@ export const getFormat: ModuleFormatHook = async (
     if (noopLoader) return await nextFormat(url, context, nextFormat);
 
     // await until all loaders are resolved
-    if (!isTopLevelAwaitEnabled) await importEsmLoadersPromise;
+    if (!isTopLevelAwaitEnabled) await initializationPromise;
 
     return await nextFormat(url, context, nextFormat);
 };
@@ -138,7 +178,7 @@ export const getSource: SourceHook = async (
     if (noopLoader) return await nextSource(url, context, nextSource);
 
     // await until all loaders are resolved
-    if (!isTopLevelAwaitEnabled) await importEsmLoadersPromise;
+    if (!isTopLevelAwaitEnabled) await initializationPromise;
 
     return await nextSource(url, context, nextSource);
 };
@@ -151,7 +191,7 @@ export const transformSource: TransformSourceHook = async (
     if (noopLoader) return await nextTransformSource(source, context, nextTransformSource);
 
     // await until all loaders are resolved
-    if (!isTopLevelAwaitEnabled) await importEsmLoadersPromise;
+    if (!isTopLevelAwaitEnabled) await initializationPromise;
 
     return await nextTransformSource(source, context, nextTransformSource);
 };
