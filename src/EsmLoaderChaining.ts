@@ -17,6 +17,16 @@ import {
 } from "./index";
 import {ERR_INVALID_RETURN_VALUE} from "./internal/Errors";
 
+// primordials: https://github.com/nodejs/node/blob/master/lib/internal/per_context/primordials.js
+const ReflectApply = Reflect.apply;
+const uncurryThis = <T, A extends any[], R>(func: (this: T, ...args: A) => R): ((this: void, thisArg: T, ...args: A) => R) => {
+    return (thisArg: T, ...args: A) => ReflectApply(func, thisArg, args);
+};
+const ArrayPrototypeJoin = uncurryThis(Array.prototype.join);
+const ArrayPrototypePush = uncurryThis(Array.prototype.push);
+const JSONStringify = JSON.stringify;
+const FunctionPrototypeBind = uncurryThis(Function.prototype.bind);
+
 
 // test top level await
 let isTopLevelAwaitEnabled = false;
@@ -46,7 +56,7 @@ for (let i = 0; i < process.execArgv.length; i++) {
 }
 
 
-// checks
+// no-op validation checks
 let noopLoader = false;
 // if this ESM loader is not the last loader in the list, but is still somehow loaded, ESM loader chaining must be supported in this node version
 // therefore, all operations should no-op to not reduplicate calls
@@ -64,41 +74,41 @@ const sourceHooks: SourceHook[] = [];
 const transformSourceHooks: TransformSourceHook[] = [];
 
 // initialize all ESM loaders and extract hooks
+// note: any future invoked code may manipulate object prototypes - all code beyond here should invoke only primordials
 const initializationPromise: Promise<never> = new Promise(async (resolve, reject) => {
     try {
         // import all ESM loaders
         const esmLoaders: EsmLoaderHook[] = [];
-        for (const loaderName of loaderNames) {
+        for (let i = 0; i < loaderNames.length; i++) {
+            const loaderName: string = loaderNames[i];
             if (loaderName !== "esm-loader-chaining") {
-                esmLoaders.push(await import(loaderName));
+                ArrayPrototypePush(esmLoaders, <EsmLoaderHook>await import(loaderName));
             }
         }
 
         // extract all hooks
-        for (const esmLoader of esmLoaders) {
+        for (let i = 0; i < esmLoaders.length; i++) {
+            const esmLoader: EsmLoaderHook = esmLoaders[i];
+
             const globalPreloadCodeHook: unknown = esmLoader.getGlobalPreloadCode;
             if (typeof globalPreloadCodeHook === "function") {
-                globalPreloadCodeHooks.push(<GlobalPreloadCodeHook>globalPreloadCodeHook);
+                ArrayPrototypePush(globalPreloadCodeHooks, <GlobalPreloadCodeHook>globalPreloadCodeHook);
             }
-
             const resolveHook: unknown = esmLoader.resolve;
             if (typeof resolveHook === "function") {
-                resolveHooks.push(<ResolveHook>resolveHook);
+                ArrayPrototypePush(resolveHooks, <ResolveHook>resolveHook);
             }
-
             const moduleFormatHook: unknown = esmLoader.getFormat;
             if (typeof moduleFormatHook === "function") {
-                moduleFormatHooks.push(<ModuleFormatHook>moduleFormatHook);
+                ArrayPrototypePush(moduleFormatHooks, <ModuleFormatHook>moduleFormatHook);
             }
-
             const sourceHook: unknown = esmLoader.getSource;
             if (typeof sourceHook === "function") {
-                sourceHooks.push(<SourceHook>sourceHook);
+                ArrayPrototypePush(sourceHooks, <SourceHook>sourceHook);
             }
-
             const transformSourceHook: unknown = esmLoader.transformSource;
             if (typeof transformSourceHook === "function") {
-                transformSourceHooks.push(<TransformSourceHook>transformSourceHook);
+                ArrayPrototypePush(transformSourceHooks, <TransformSourceHook>transformSourceHook);
             }
         }
 
@@ -118,11 +128,13 @@ export const getGlobalPreloadCode: GlobalPreloadCodeHook = (): string => {
     // unable to generate preload code; return nothing
     if (noopLoader || !isTopLevelAwaitEnabled) return "";
 
-    const preloadCodeList: string[] = [];
+    const escapedPreloadCode: string[] = [];
     // retrieve global preload code from all hooks
-    for (const globalPreloadCodeHook of globalPreloadCodeHooks) {
+    for (let i = 0; i < globalPreloadCodeHooks.length; i++) {
+        const globalPreloadCodeHook: GlobalPreloadCodeHook = globalPreloadCodeHooks[i];
+
         // set 'this' to null and invoke to retrieve preload code
-        const preloadCode: unknown = globalPreloadCodeHook.bind(null)();
+        const preloadCode: unknown = FunctionPrototypeBind(globalPreloadCodeHook, null)();
         // ignore null return values
         if (preloadCode !== null) {
             // validate preload return value
@@ -130,14 +142,13 @@ export const getGlobalPreloadCode: GlobalPreloadCodeHook = (): string => {
                 throw new ERR_INVALID_RETURN_VALUE("string", "loader getGlobalPreloadCode", preloadCode);
             }
             // add global preload code to list
-            preloadCodeList.push(preloadCode);
+            ArrayPrototypePush(escapedPreloadCode, JSONStringify(preloadCode));
         }
     }
-
     // return wrapper for global preload code
     return `
-        for (const preloadCode of [${preloadCodeList.map(code => JSON.stringify(code)).join(",")}]) {
-            const {compileFunction} = require("vm");
+        const {compileFunction} = require("vm");
+        for (const preloadCode of [${ArrayPrototypeJoin(escapedPreloadCode, ",")}]) {
             compileFunction(preloadCode, ["getBuiltin"], {filename: "<preload>"})
                 .call(globalThis, require);
         }
