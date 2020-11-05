@@ -8,6 +8,13 @@ import {readFileSync, writeFileSync} from "fs";
 import {URL} from "url";
 import map, {StreamMapperCallback} from "map-stream";
 import File from "vinyl";
+import sourcemaps from "gulp-sourcemaps";
+
+declare module "gulp-sourcemaps" {
+    export interface WriteOptions {
+        sourceMappingURL?(file: File): string;
+    }
+}
 
 // source: https://stackoverflow.com/a/53582084
 const __dirname = path.join(path.dirname(decodeURI(new URL(import.meta.url).pathname))).replace(/^\\([A-Z]:\\)/, "$1");
@@ -94,6 +101,7 @@ export class Gulpfile {
         ].filter(source => source != "gulpfile.ts");
 
         return gulp.src(sources, {allowEmpty: true, base: this.root})
+            .pipe(sourcemaps.init({loadMaps: true}))
             // transpile TypeScript sources
             .pipe(this.project())
             // rewrite extensions to .mjs on ESM loaders
@@ -104,6 +112,11 @@ export class Gulpfile {
                     file.basename = `${parse(file.basename).name}.mjs`;
                 }
                 callback(null, file);
+            }))
+            .pipe(sourcemaps.write(this.target, {
+                addComment: true,
+                includeContent: false,
+                sourceMappingURL: (file: File) => `${file.basename}.map`,
             }))
             // write to target build directory
             .pipe(gulp.dest(this.target));
