@@ -49,7 +49,7 @@ export class Gulpfile {
      */
     @gulpclass.SequenceTask("build")
     public buildTask(): string[] {
-        return ["clean", "transpile", "includes:typings"];
+        return ["clean", "transpile", "lint", "includes:typings"];
     }
 
     /**
