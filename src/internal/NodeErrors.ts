@@ -9,7 +9,8 @@ export class ERR_INVALID_RETURN_VALUE extends TypeError {
         } else {
             type = `type ${typeof value}`;
         }
-
         super(`Expected ${input} to be returned from the "${name}" function but got ${type}.`);
+
+        (<any>this).code = "ERR_INVALID_RETURN_VALUE";
     }
 }
