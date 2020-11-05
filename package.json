@@ -13,8 +13,8 @@
   },
   "scripts": {
     "lint": "eslint --config .eslintrc.json --ext .ts --color src",
-    "build": "gulp --no-warnings --loader=ts-node/esm build",
-    "build:dev": "gulp --no-warnings --loader=ts-node/esm build:dev"
+    "build": "gulp --no-warnings --loader=./ts-node-esm-loader-fix.mjs build",
+    "build:dev": "gulp --no-warnings --loader=./ts-node-esm-loader-fix.mjs build:dev"
   },
   "devDependencies": {
     "@types/del": "^4.0.0",
