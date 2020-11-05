@@ -6,10 +6,12 @@
   "license": "MIT",
   "repository": "https://github.com/concision/esm-pipeline-loader",
   "type": "module",
-  "main": "EsmLoaderChaining.js",
+  "main": "index.mjs",
   "typings": "index.d.ts",
   "exports": {
-    ".": "./EsmLoaderChaining.js"
+    ".": "./index.mjs",
+    "no-tla": "./no-tla.mjs",
+    "no-tla.mjs": "./no-tla.mjs"
   },
   "scripts": {
     "lint": "eslint --config .eslintrc.json --ext .ts --color src",
@@ -21,6 +23,7 @@
     "@types/gulp": "^4.0.7",
     "@types/gulp-typescript": "^2.13.0",
     "@types/node": "^14.14.6",
+    "@types/vinyl": "^2.0.4",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
     "del": "^6.0.0",
