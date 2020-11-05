@@ -6,17 +6,18 @@
   "license": "MIT",
   "repository": "https://github.com/concision/esm-pipeline-loader",
   "type": "module",
-  "main": "index.mjs",
-  "typings": "index.d.ts",
+  "main": "dist/index.mjs",
+  "typings": "dist/index.d.ts",
   "exports": {
-    ".": "./index.mjs",
-    "no-tla": "./no-tla.mjs",
-    "no-tla.mjs": "./no-tla.mjs"
+    ".": "./dist/index.mjs",
+    "./no-tla": "./dist/no-tla.mjs",
+    "./no-tla.mjs": "./dist/no-tla.mjs"
   },
   "scripts": {
     "lint": "eslint --config .eslintrc.json --ext .ts --color src",
     "build": "gulp --no-warnings --loader=ts-node/esm build",
-    "build:dev": "gulp --no-warnings --loader=ts-node/esm build:dev"
+    "build:dev": "gulp --no-warnings --loader=ts-node/esm build:dev",
+    "prepublish": "gulp --no-warnings --loader=ts-node/esm prepublish"
   },
   "devDependencies": {
     "@types/del": "^4.0.0",

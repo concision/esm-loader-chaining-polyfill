@@ -3,7 +3,7 @@ import gulpclass from "gulpclass";
 import typescript, {Project} from "gulp-typescript";
 import del from "del";
 import run from "gulp-run";
-import path, {resolve, parse} from "path";
+import path, {parse, resolve} from "path";
 import {readFileSync, writeFileSync} from "fs";
 import {URL} from "url";
 import map, {StreamMapperCallback} from "map-stream";
@@ -34,14 +34,14 @@ export class Gulpfile {
     private readonly target: string = resolve(__dirname, this.project.config.compilerOptions.outDir);
 
 
-    // tasks
+    // grouped tasks
 
     /**
      * Build project without linting
      */
     @gulpclass.SequenceTask("build:dev")
     public buildDevTask(): string[] {
-        return ["clean", "transpile", "includes", "package"];
+        return ["clean", "transpile", "includes:typings"];
     }
 
     /**
@@ -49,8 +49,19 @@ export class Gulpfile {
      */
     @gulpclass.SequenceTask("build")
     public buildTask(): string[] {
-        return ["clean", "lint", "transpile", "includes", "package"];
+        return ["clean", "transpile", "includes:typings"];
     }
+
+    /**
+     * Build project and prepare for npm publish
+     */
+    @gulpclass.SequenceTask("prepublish")
+    public prepublishTask(): string[] {
+        return ["build", "includes:docs", "package"];
+    }
+
+
+    // individual tasks
 
     /**
      * Delete {@link target} directory
@@ -92,27 +103,30 @@ export class Gulpfile {
                     // change file extension to .mjs
                     file.basename = `${parse(file.basename).name}.mjs`;
                 }
-                callback(null, file)
+                callback(null, file);
             }))
             // write to target build directory
             .pipe(gulp.dest(this.target));
     }
 
     /**
-     * Copy other files to distributed files
+     * Copy README.md and LICENSE files to distributed files
      */
-    @gulpclass.Task("includes")
+    @gulpclass.Task("includes:docs")
     public includeTask(): unknown {
-        return Promise.all([
-            // add README.md and LICENSE
-            gulp.src(["README.md", "LICENSE"], {base: __dirname})
-                // write to target build directory
-                .pipe(gulp.dest(this.target)),
-            // add module typings
-            gulp.src(["**/typings/index.d.ts"], {base: resolve(this.root, "typings")})
-                // write to target build directory
-                .pipe(gulp.dest(this.target)),
-        ]);
+        return gulp.src(["README.md", "LICENSE"], {base: __dirname})
+            // write to target build directory
+            .pipe(gulp.dest(this.target));
+    }
+
+    /**
+     * Copy module typings to distributed files
+     */
+    @gulpclass.Task("includes:typings")
+    public includeTypingsTask(): unknown {
+        return gulp.src(["**/typings/index.d.ts"], {base: resolve(this.root, "typings")})
+            // write to target build directory
+            .pipe(gulp.dest(this.target));
     }
 
     /**
@@ -126,6 +140,14 @@ export class Gulpfile {
         // delete unnecessary tags
         delete packageJson["scripts"];
         delete packageJson["devDependencies"];
+
+        // relink 'dist' references
+        packageJson["main"] = packageJson["main"].replace("dist/", "");
+        packageJson["typings"] = packageJson["typings"].replace("dist/", "");
+        const exports = packageJson["exports"];
+        for (const exportKey of Object.keys(exports)) {
+            exports[exportKey] = exports[exportKey].replace("dist/", "");
+        }
 
         // write package.json
         writeFileSync(
