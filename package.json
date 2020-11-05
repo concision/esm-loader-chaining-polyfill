@@ -20,6 +20,7 @@
     "README.md"
   ],
   "scripts": {
+    "clean": "gulp --no-warnings --loader=ts-node/esm clean",
     "lint": "eslint --config .eslintrc.json --ext .ts --color src",
     "build": "gulp --no-warnings --loader=ts-node/esm build",
     "build:dev": "gulp --no-warnings --loader=ts-node/esm build:dev",
