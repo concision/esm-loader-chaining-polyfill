@@ -3,9 +3,11 @@ import gulpclass from "gulpclass";
 import typescript, {Project} from "gulp-typescript";
 import del from "del";
 import run from "gulp-run";
-import path, {resolve} from "path";
+import path, {resolve, parse} from "path";
 import {readFileSync, writeFileSync} from "fs";
 import {URL} from "url";
+import map, {StreamMapperCallback} from "map-stream";
+import File from "vinyl";
 
 // source: https://stackoverflow.com/a/53582084
 const __dirname = path.join(path.dirname(decodeURI(new URL(import.meta.url).pathname))).replace(/^\\([A-Z]:\\)/, "$1");
@@ -83,6 +85,15 @@ export class Gulpfile {
         return gulp.src(sources, {allowEmpty: true, base: this.root})
             // transpile TypeScript sources
             .pipe(this.project())
+            // rewrite extensions to .mjs on ESM loaders
+            .pipe(map((file: File, callback: StreamMapperCallback<File>) => {
+                // if the file is in the base directory, it must be an ESM loader
+                if (file.base === file.dirname) {
+                    // change file extension to .mjs
+                    file.basename = `${parse(file.basename).name}.mjs`;
+                }
+                callback(null, file)
+            }))
             // write to target build directory
             .pipe(gulp.dest(this.target));
     }
@@ -98,7 +109,7 @@ export class Gulpfile {
                 // write to target build directory
                 .pipe(gulp.dest(this.target)),
             // add module typings
-            gulp.src(["**/index.d.ts"], {base: this.root})
+            gulp.src(["**/typings/index.d.ts"], {base: resolve(this.root, "typings")})
                 // write to target build directory
                 .pipe(gulp.dest(this.target)),
         ]);
