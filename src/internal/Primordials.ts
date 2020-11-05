@@ -6,7 +6,7 @@ const ReflectApply = Reflect.apply;
  * Uncurries the 'this' context to a parameter
  * @param func {Function} function to uncurry
  */
-const uncurryThis = <T, A extends any[], R>(func: (this: T, ...args: A) => R): ((this: void, thisArg: T, ...args: A) => R) => {
+const uncurryThis = <T, A extends unknown[], R>(func: (this: T, ...args: A) => R): ((this: void, thisArg: T, ...args: A) => R) => {
     return (thisArg: T, ...args: A) => ReflectApply(func, thisArg, args);
 };
 

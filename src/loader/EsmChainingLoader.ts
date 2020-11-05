@@ -99,6 +99,7 @@ export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Pr
 
         try {
             // try importing as a CommonJS module
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
             const esmLoader = require(loaderName);
             // extract hooks
             ArrayPrototypePush(hooks, esmLoader);
