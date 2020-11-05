@@ -17,7 +17,7 @@
     "lint": "eslint --config .eslintrc.json --ext .ts --color src",
     "build": "gulp --no-warnings --loader=ts-node/esm build",
     "build:dev": "gulp --no-warnings --loader=ts-node/esm build:dev",
-    "prepublish": "gulp --no-warnings --loader=ts-node/esm prepublish"
+    "prepack": "gulp --no-warnings --loader=ts-node/esm prepack"
   },
   "devDependencies": {
     "@types/del": "^4.0.0",

@@ -62,8 +62,8 @@ export class Gulpfile {
     /**
      * Build project and prepare for npm publish
      */
-    @gulpclass.SequenceTask("prepublish")
-    public prepublishTask(): string[] {
+    @gulpclass.SequenceTask("prepack")
+    public prepackTask(): string[] {
         return ["build", "includes:docs", "package"];
     }
 
