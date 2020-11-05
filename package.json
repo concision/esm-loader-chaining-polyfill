@@ -6,12 +6,12 @@
   "license": "MIT",
   "repository": "https://github.com/concision/esm-pipeline-loader",
   "type": "module",
-  "main": "dist/index.mjs",
+  "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.mjs",
-    "./no-tla": "./dist/no-tla.mjs",
-    "./no-tla.mjs": "./dist/no-tla.mjs"
+    ".": "./dist/index.js",
+    "./no-tla": "./dist/no-tla.js",
+    "./no-tla.mjs": "./dist/no-tla.js"
   },
   "files": [
     "dist/",
