@@ -59,11 +59,11 @@ export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Pr
 
     // no-op validation checks
     let noopLoader = false;
+    // no other loaders specified
+    if (esmLoaderNames.length <= 1) noopLoader = true;
     // if this ESM loader is not the last loader in the list, but is still somehow loaded, ESM loader chaining must be natively supported
     // therefore, all operations should no-op to not duplicate calls
-    if (esmLoaderNames[esmLoaderNames.length - 1] !== "esm-loader-chaining") {
-        noopLoader = true;
-    }
+    if (esmLoaderNames[esmLoaderNames.length - 1] !== "esm-loader-chaining") noopLoader = true;
     // TODO: no-op if the current version has nodejs/node#33812 merged
     // if the ESM loader should no-op, return no hooks
     if (noopLoader) {
