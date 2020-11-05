@@ -5,7 +5,7 @@ declare module "map-stream" {
     declare namespace map {
         declare type StreamMapper<T, R> = (data: T, callback: StreamMapperCallback<R>) => void;
 
-        declare type StreamMapperCallback = (error?: any, newData?: K) => void;
+        declare type StreamMapperCallback<R> = (error?: any, newData?: R) => void;
     }
 
     declare function map<T>(mapper: StreamMapper<T>): ReadWriteStream;
