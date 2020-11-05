@@ -29,7 +29,7 @@ import {
     PromiseResolve,
 } from "../internal/Primordials.js";
 import {createRequire} from "module";
-import {ERR_INVALID_RETURN_VALUE} from "../internal/NodeErrors";
+import {ERR_INVALID_RETURN_VALUE} from "../internal/NodeErrors.js";
 
 
 type ExtractedEsmLoaderHooks = { [P in keyof EsmLoaderHook]-?: Array<Required<EsmLoaderHook>[P]> };
