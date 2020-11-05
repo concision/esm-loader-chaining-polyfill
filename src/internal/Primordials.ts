@@ -12,5 +12,12 @@ const uncurryThis = <T, A extends any[], R>(func: (this: T, ...args: A) => R): (
 
 export const ArrayPrototypeJoin = uncurryThis(Array.prototype.join);
 export const ArrayPrototypePush = uncurryThis(Array.prototype.push);
-export const JSONStringify = JSON.stringify;
+export const ArrayPrototypeSplice = uncurryThis(Array.prototype.splice);
 export const FunctionPrototypeBind = uncurryThis(Function.prototype.bind);
+export const JSONStringify = JSON.stringify;
+export const Map = global.Map;
+export const MapPrototypeGet = uncurryThis(Map.prototype.get);
+export const MapPrototypeHas = uncurryThis(Map.prototype.has);
+export const MapPrototypeSet = uncurryThis(Map.prototype.set);
+export const ObjectValues = Object.values;
+export const PromiseResolve = Promise.resolve;

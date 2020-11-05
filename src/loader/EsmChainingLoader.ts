@@ -15,7 +15,19 @@ import {
     TransformSourceHook,
     TransformSourceResult,
 } from "../typings";
-import {ArrayPrototypeJoin, ArrayPrototypePush, FunctionPrototypeBind, JSONStringify} from "../internal/Primordials.js";
+import {
+    ArrayPrototypeJoin,
+    ArrayPrototypePush,
+    ArrayPrototypeSplice,
+    FunctionPrototypeBind,
+    JSONStringify,
+    Map,
+    MapPrototypeGet,
+    MapPrototypeHas,
+    MapPrototypeSet,
+    ObjectValues,
+    PromiseResolve,
+} from "../internal/Primordials.js";
 import {createRequire} from "module";
 import {ERR_INVALID_RETURN_VALUE} from "../internal/NodeErrors";
 
@@ -28,13 +40,21 @@ export function createEsmLoader(settings: { async: false }): EsmLoaderHook;
 export function createEsmLoader(settings: { async: true }): Promise<EsmLoaderHook>;
 
 export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Promise<EsmLoaderHook> {
-    // emit warnings
-    if (!async) {
-        process.emitWarning("esm-loader-chaining: --experimental-top-level-await or --harmony-top-level-await must be specified to properly support the getGlobalPreloadCode hook");
-    }
-
     // parse Node.js VM flags
-    const esmLoaderNames: string[] = extractLoaderNames(process.execArgv);
+    const esmLoaderNames: string[] = [];
+    for (let i = 0; i < process.execArgv.length; i++) {
+        const nodeArg = process.execArgv[i];
+
+        let loaderName;
+        if (nodeArg === "--loader" || nodeArg === "--experimental-loader") {
+            loaderName = process.execArgv[i + 1];
+        } else if (nodeArg.startsWith("--loader=") || nodeArg.startsWith("--experimental-loader=")) {
+            loaderName = nodeArg.substring(nodeArg.indexOf("=") + 1);
+        }
+        if (typeof loaderName !== "undefined") {
+            esmLoaderNames.push(loaderName);
+        }
+    }
 
 
     // no-op validation checks
@@ -48,12 +68,16 @@ export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Pr
     // if the ESM loader should no-op, return no hooks
     if (noopLoader) {
         if (async) {
-            return Promise.resolve({});
+            return PromiseResolve({});
         } else {
             return {};
         }
     }
 
+
+    // loaded ESM loaders
+    const esmLoaders: EsmLoaderHook[] = [];
+    const importedCommonJsEsmLoaders: Map<string, EsmLoaderHook> = new Map();
 
     // extracted loader hooks
     const hooks: ExtractedEsmLoaderHooks = {
@@ -66,65 +90,98 @@ export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Pr
 
     // create a CommonJS require import function in the current working directory
     const require = createRequire(process.cwd());
-
-    const esmLoaders: EsmLoaderHook[] = [];
-    const unimportedEsmLoaders: string[] = [];
-
     // synchronously import all CommonJS ESM loaders
+    // note: any future invoked code may manipulate object prototypes - all code beyond here should invoke only primordials
     for (let i = 0; i < esmLoaderNames.length; i++) {
         const loaderName: string = esmLoaderNames[i];
         // skip self ESM loader
         if (loaderName === "esm-loader-chaining") continue;
 
         try {
-            // try importing as a CommonJS module and extract hooks
-            ArrayPrototypePush(hooks, require(loaderName));
+            // try importing as a CommonJS module
+            const esmLoader = require(loaderName);
+            // extract hooks
+            ArrayPrototypePush(hooks, esmLoader);
+            MapPrototypeSet(importedCommonJsEsmLoaders, loaderName, esmLoader);
         } catch (error) {
             // rethrow if not ERR_REQUIRE_ESM: https://nodejs.org/api/errors.html#errors_err_require_esm
             if (!(error?.constructor?.name === "NodeError" && error.code === "ERR_REQUIRE_ESM")) {
                 throw error;
             }
-            // delegate to ESM import
-            ArrayPrototypePush(unimportedEsmLoaders, loaderName);
         }
     }
-    compileHooks(hooks, esmLoaders);
+    // compile all known CommonJS hooks
+    extractEsmLoaderHooks(hooks, esmLoaders);
 
-    // initialize all ESM loaders and extract hooks
-    // note: any future invoked code may manipulate object prototypes - all code beyond here should invoke only primordials
-    const initializationPromise: Promise<never> = new Promise(async (resolve, reject) => {
-        try {
-            // import all ESM loaders
-            const esmLoaders: EsmLoaderHook[] = [];
-            for (let i = 0; i < esmLoaderNames.length; i++) {
-                const loaderName: string = esmLoaderNames[i];
-                if (loaderName !== "esm-loader-chaining") {
-                    try {
-                        const module = require(loaderName);
-                    } catch (error) {
+    // asynchronously import all ES module ESM loaders
+    const asynchronousInitialization: Promise<void> = (async () => {
+        // clear all ESM loaders
+        ArrayPrototypeSplice(esmLoaders, 0, esmLoaders.length);
 
-                    }
+        // import all ES modules and reuse cached CommonJS modules
+        for (let i = 0; i < esmLoaderNames.length; i++) {
+            const loaderName: string = esmLoaderNames[i];
+            // skip self ESM loader
+            if (loaderName === "esm-loader-chaining") continue;
 
-
-                    ArrayPrototypePush(esmLoaders, <EsmLoaderHook>await import(loaderName));
-                }
+            // collect ESM loader
+            let esmLoader: EsmLoaderHook;
+            if (MapPrototypeHas(importedCommonJsEsmLoaders, loaderName)) { // CommonJS
+                esmLoader = MapPrototypeGet(importedCommonJsEsmLoaders, loaderName);
+            } else { // ESM
+                esmLoader = await import(loaderName);
             }
-
-            // recompile hooks
-            for (let hookArray of Object.values(hooks)) {
-                hookArray.splice(0, hookArray.length);
-            }
-            compileHooks(hooks, esmLoaders);
-
-            resolve();
-        } catch (exception) {
-            reject(exception);
+            ArrayPrototypePush(esmLoaders, esmLoader);
         }
-    });
+
+        // recompile all known hooks
+        extractEsmLoaderHooks(hooks, esmLoaders);
+    })();
 
 
-    // TODO: implement stub
-    const compiledHooks: EsmLoaderHook = {
+    if (async) {
+        return (async () => compileEsmLoaderFromHooks(hooks, asynchronousInitialization))();
+    } else {
+        return compileEsmLoaderFromHooks(hooks, asynchronousInitialization);
+    }
+}
+
+
+function extractEsmLoaderHooks(hooks: ExtractedEsmLoaderHooks, esmLoaders: EsmLoaderHook[]) {
+    // clear extracted hooks
+    for (const hookArray of ObjectValues(hooks)) {
+        ArrayPrototypeSplice(hookArray, 0, hookArray.length);
+    }
+
+    // (re)compile extracted hooks
+    for (let i = 0; i < esmLoaders.length; i++) {
+        const esmLoader = esmLoaders[i];
+
+        const globalPreloadCodeHook: unknown = esmLoader.getGlobalPreloadCode;
+        if (typeof globalPreloadCodeHook === "function") {
+            ArrayPrototypePush(hooks.getGlobalPreloadCode, <GlobalPreloadCodeHook>globalPreloadCodeHook);
+        }
+        const resolveHook: unknown = esmLoader.resolve;
+        if (typeof resolveHook === "function") {
+            ArrayPrototypePush(hooks.resolve, <ResolveHook>resolveHook);
+        }
+        const moduleFormatHook: unknown = esmLoader.getFormat;
+        if (typeof moduleFormatHook === "function") {
+            ArrayPrototypePush(hooks.getFormat, <ModuleFormatHook>moduleFormatHook);
+        }
+        const sourceHook: unknown = esmLoader.getSource;
+        if (typeof sourceHook === "function") {
+            ArrayPrototypePush(hooks.getSource, <SourceHook>sourceHook);
+        }
+        const transformSourceHook: unknown = esmLoader.transformSource;
+        if (typeof transformSourceHook === "function") {
+            ArrayPrototypePush(hooks.transformSource, <TransformSourceHook>transformSourceHook);
+        }
+    }
+}
+
+function compileEsmLoaderFromHooks(hooks: ExtractedEsmLoaderHooks, asynchronousInitialization: Promise<void>): Required<EsmLoaderHook> {
+    return {
         getGlobalPreloadCode: (): string => {
             const escapedPreloadCode: string[] = [];
             // retrieve global preload code from all hooks
@@ -157,6 +214,7 @@ export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Pr
             context: ResolveContext,
             nextResolve: ResolveHook,
         ): Promise<ResolveResult> => {
+            await asynchronousInitialization;
             return nextResolve(specifier, context, nextResolve);
         },
         getFormat: async (
@@ -164,6 +222,7 @@ export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Pr
             context: ModuleFormatContext,
             nextFormat: ModuleFormatHook,
         ): Promise<ModuleFormatResult> => {
+            await asynchronousInitialization;
             return await nextFormat(url, context, nextFormat);
         },
         getSource: async (
@@ -171,6 +230,7 @@ export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Pr
             context: SourceContext,
             nextSource: SourceHook,
         ): Promise<SourceResult> => {
+            await asynchronousInitialization;
             return await nextSource(url, context, nextSource);
         },
         transformSource: async (
@@ -178,60 +238,8 @@ export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Pr
             context: TransformSourceContext,
             nextTransformSource: TransformSourceHook,
         ): Promise<TransformSourceResult> => {
+            await asynchronousInitialization;
             return await nextTransformSource(source, context, nextTransformSource);
         },
     };
-
-
-    // TODO: implement
-    if (async) {
-        return Promise.resolve(compiledHooks);
-    } else {
-        return compiledHooks;
-    }
-}
-
-function extractLoaderNames(nodeArgs: string[]): string[] {
-    const esmLoaderImports: string[] = [];
-    for (let i = 0; i < nodeArgs.length; i++) {
-        const nodeArg = nodeArgs[i];
-
-        let loaderName;
-        if (nodeArg === "--loader" || nodeArg === "--experimental-loader") {
-            loaderName = nodeArgs[i + 1];
-        } else if (nodeArg.startsWith("--loader=") || nodeArg.startsWith("--experimental-loader=")) {
-            loaderName = nodeArg.substring(nodeArg.indexOf("=") + 1);
-        }
-        if (typeof loaderName !== "undefined") {
-            esmLoaderImports.push(loaderName);
-        }
-    }
-    return esmLoaderImports;
-}
-
-function compileHooks(hooks: ExtractedEsmLoaderHooks, esmLoaders: EsmLoaderHook[]) {
-    for (let i = 0; i < esmLoaders.length; i++) {
-        const esmLoader = esmLoaders[i];
-
-        const globalPreloadCodeHook: unknown = esmLoader.getGlobalPreloadCode;
-        if (typeof globalPreloadCodeHook === "function") {
-            ArrayPrototypePush(hooks.getGlobalPreloadCode, <GlobalPreloadCodeHook>globalPreloadCodeHook);
-        }
-        const resolveHook: unknown = esmLoader.resolve;
-        if (typeof resolveHook === "function") {
-            ArrayPrototypePush(hooks.resolve, <ResolveHook>resolveHook);
-        }
-        const moduleFormatHook: unknown = esmLoader.getFormat;
-        if (typeof moduleFormatHook === "function") {
-            ArrayPrototypePush(hooks.getFormat, <ModuleFormatHook>moduleFormatHook);
-        }
-        const sourceHook: unknown = esmLoader.getSource;
-        if (typeof sourceHook === "function") {
-            ArrayPrototypePush(hooks.getSource, <SourceHook>sourceHook);
-        }
-        const transformSourceHook: unknown = esmLoader.transformSource;
-        if (typeof transformSourceHook === "function") {
-            ArrayPrototypePush(hooks.transformSource, <TransformSourceHook>transformSourceHook);
-        }
-    }
 }
