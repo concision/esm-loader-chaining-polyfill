@@ -3,10 +3,9 @@ import gulpclass from "gulpclass";
 import typescript, {Project} from "gulp-typescript";
 import del from "del";
 import run from "gulp-run";
-import path, {parse, resolve} from "path";
+import path, {resolve} from "path";
 import {readFileSync, writeFileSync} from "fs";
 import {URL} from "url";
-import map, {StreamMapperCallback} from "map-stream";
 import File from "vinyl";
 import sourcemaps from "gulp-sourcemaps";
 
@@ -104,15 +103,6 @@ export class Gulpfile {
             .pipe(sourcemaps.init({loadMaps: true}))
             // transpile TypeScript sources
             .pipe(this.project())
-            // rewrite extensions to .mjs on ESM loaders
-            .pipe(map((file: File, callback: StreamMapperCallback<File>) => {
-                // if the file is in the base directory, it must be an ESM loader
-                if (file.base === file.dirname) {
-                    // change file extension to .mjs
-                    file.basename = `${parse(file.basename).name}.mjs`;
-                }
-                callback(null, file);
-            }))
             .pipe(sourcemaps.write(this.target, {
                 addComment: true,
                 includeContent: false,
