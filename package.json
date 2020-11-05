@@ -13,6 +13,12 @@
     "./no-tla": "./dist/no-tla.mjs",
     "./no-tla.mjs": "./dist/no-tla.mjs"
   },
+  "files": [
+    "dist/",
+    "package.json",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "lint": "eslint --config .eslintrc.json --ext .ts --color src",
     "build": "gulp --no-warnings --loader=ts-node/esm build",
