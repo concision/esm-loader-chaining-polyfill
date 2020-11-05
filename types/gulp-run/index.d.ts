@@ -1,5 +1,7 @@
 declare module "gulp-run" {
-    declare namespace GulpRun {
+    import {GulpCommand, Options} from "gulp-run";
+
+    declare namespace run {
         export interface Options {
             readonly env?: Record<string, unknown>;
             readonly cwd?: string;
@@ -13,12 +15,7 @@ declare module "gulp-run" {
         }
     }
 
-    declare const run: {
-        (
-            template: string,
-            options?: GulpRun.Options,
-        ): GulpRun.GulpCommand;
-    };
+    declare function run(template: string, options?: Options): GulpCommand;
 
     export = run;
 }
