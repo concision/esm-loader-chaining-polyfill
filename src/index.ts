@@ -1,5 +1,5 @@
 import {EsmLoaderHook} from "./typings";
-import {createEsmLoader} from "./loader/EsmChainingLoader.js";
+import {createEsmLoader} from "./loader/EsmChainingLoaderBuilder.js";
 
 export const {
     getGlobalPreloadCode,
