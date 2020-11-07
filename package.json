@@ -11,7 +11,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./no-tla": "./dist/no-tla.js",
-    "./no-tla.mjs": "./dist/no-tla.js"
+    "./no-tla.js": "./dist/no-tla.js"
   },
   "files": [
     "dist/",

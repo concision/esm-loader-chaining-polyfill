@@ -1,3 +1,5 @@
+import {URL} from "url";
+
 // primordials: https://github.com/nodejs/node/blob/master/lib/internal/per_context/primordials.js
 
 const ReflectApply = Reflect.apply;
@@ -21,3 +23,5 @@ export const MapPrototypeHas = uncurryThis(Map.prototype.has);
 export const MapPrototypeSet = uncurryThis(Map.prototype.set);
 export const ObjectValues = Object.values;
 export const PromiseResolve = Promise.resolve;
+export const StringPrototypeStartsWith = uncurryThis(String.prototype.startsWith);
+export const URLPrototypeToString = uncurryThis(URL.prototype.toString);
