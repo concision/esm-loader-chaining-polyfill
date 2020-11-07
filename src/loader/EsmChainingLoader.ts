@@ -54,7 +54,7 @@ export function newEsmLoaderFromHooks(hooks: ExtractedEsmLoaderHooks, asynchrono
                 const preloadCode = [${ArrayPrototypeJoin(escapedPreloadCode, ",")}];
                 for (let i = 0; i < preloadCode.length; i++) {
                     compileFunction(preloadCode[i], ["getBuiltin"], {filename: "<preload>"})
-                        .call(globalThis, require);
+                        .call(globalThis, getBuiltin);
                 }
             `;
         },
