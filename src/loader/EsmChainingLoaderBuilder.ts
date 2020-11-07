@@ -16,8 +16,8 @@ import {
     ObjectValues,
     PromiseResolve,
 } from "../internal/Primordials.js";
+import {ExtractedEsmLoaderHooks, newEsmLoaderFromHooks} from "./EsmChainingLoader.js";
 import {createRequire} from "module";
-import {newEsmLoaderFromHooks, ExtractedEsmLoaderHooks} from "./EsmChainingLoader";
 
 
 export function createEsmLoader(settings: { async: false }): EsmLoaderHook;
@@ -87,9 +87,10 @@ export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Pr
             // eslint-disable-next-line @typescript-eslint/no-var-requires
             const esmLoader = require(loaderName);
             // extract hooks
-            ArrayPrototypePush(hooks, esmLoader);
+            ArrayPrototypePush(esmLoaders, esmLoader);
             MapPrototypeSet(importedCommonJsEsmLoaders, loaderName, esmLoader);
         } catch (error) {
+            continue;
             // rethrow if not ERR_REQUIRE_ESM: https://nodejs.org/api/errors.html#errors_err_require_esm
             if (!(error?.constructor?.name === "NodeError" && error.code === "ERR_REQUIRE_ESM")) {
                 throw error;
@@ -125,7 +126,10 @@ export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Pr
     })();
 
     if (async) {
-        return (async () => newEsmLoaderFromHooks(hooks, asynchronousInitialization))();
+        return (async () => {
+            await asynchronousInitialization;
+            return newEsmLoaderFromHooks(hooks, asynchronousInitialization);
+        })();
     } else {
         return newEsmLoaderFromHooks(hooks, asynchronousInitialization);
     }
