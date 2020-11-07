@@ -90,9 +90,8 @@ export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Pr
             ArrayPrototypePush(esmLoaders, esmLoader);
             MapPrototypeSet(importedCommonJsEsmLoaders, loaderName, esmLoader);
         } catch (error) {
-            continue;
             // rethrow if not ERR_REQUIRE_ESM: https://nodejs.org/api/errors.html#errors_err_require_esm
-            if (!(error?.constructor?.name === "NodeError" && error.code === "ERR_REQUIRE_ESM")) {
+            if (!(error?.code === "ERR_REQUIRE_ESM" || error?.code === "MODULE_NOT_FOUND")) {
                 throw error;
             }
         }
