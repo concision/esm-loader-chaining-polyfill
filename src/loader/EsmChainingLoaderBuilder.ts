@@ -18,6 +18,7 @@ import {ExtractedEsmLoaderHooks, newEsmLoaderFromHooks} from "./EsmChainingLoade
 import {createRequire} from "module";
 import {resolve} from "path";
 import {pathToFileURL} from "url";
+import {parseNodeOptions} from "../internal/NodeOptions.js";
 
 
 export function createEsmLoader(settings: { async: false }): EsmLoaderHook;
@@ -25,14 +26,17 @@ export function createEsmLoader(settings: { async: false }): EsmLoaderHook;
 export function createEsmLoader(settings: { async: true }): Promise<EsmLoaderHook>;
 
 export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Promise<EsmLoaderHook> {
-    // parse Node.js VM flags
+    // collect Node.js arguments
+    const nodeArgs: string[] = [...parseNodeOptions(process.env.NODE_OPTIONS || ""), ...process.execArgv];
+
+    // parse Node.js VM flags for --loader or --experimental-loader
     const esmLoaderNames: string[] = [];
-    for (let i = 0; i < process.execArgv.length; i++) {
-        const nodeArg = process.execArgv[i];
+    for (let i = 0; i < nodeArgs.length; i++) {
+        const nodeArg = nodeArgs[i];
 
         let loaderName;
         if (nodeArg === "--loader" || nodeArg === "--experimental-loader") {
-            loaderName = process.execArgv[i + 1];
+            loaderName = nodeArgs[i + 1];
         } else if (nodeArg.startsWith("--loader=") || nodeArg.startsWith("--experimental-loader=")) {
             loaderName = nodeArg.substring(nodeArg.indexOf("=") + 1);
         }
