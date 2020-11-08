@@ -5,7 +5,7 @@ import {
     ResolveHook,
     SourceHook,
     TransformSourceHook,
-} from "../typings";
+} from "@esm-loaders/types";
 import {
     ArrayPrototypePush,
     ArrayPrototypeSplice,

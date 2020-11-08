@@ -36,7 +36,7 @@ export interface ModuleFormatResult {
 }
 
 export interface ModuleFormatHook {
-    (url: string, context: ModuleFormatContext, nextFormat: ModuleFormatHook): Promise<ModuleFormatResult>
+    (url: string, context: ModuleFormatContext, nextFormat: ModuleFormatHook): Promise<ModuleFormatResult>;
 }
 
 
@@ -65,5 +65,5 @@ export interface TransformSourceResult {
 }
 
 export interface TransformSourceHook {
-    (source: Source, context: TransformSourceContext, nextTransformSource: TransformSourceHook): Promise<TransformSourceResult>
+    (source: Source, context: TransformSourceContext, nextTransformSource: TransformSourceHook): Promise<TransformSourceResult>;
 }

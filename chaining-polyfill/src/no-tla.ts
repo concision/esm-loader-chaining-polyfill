@@ -1,4 +1,4 @@
-import {EsmLoaderHook} from "./typings";
+import {EsmLoaderHook} from "@esm-loaders/types";
 import {createEsmLoader} from "./loader/EsmChainingLoaderBuilder.js";
 
 process.emitWarning(
