@@ -1,0 +1,8 @@
+{
+  "name": "coffeescript",
+  "version": "0.1.0",
+  "description": "Composable Node.js CoffeeScript ESM experimental loader",
+  "author": "Concision <contact@concision.me>",
+  "license": "MIT",
+  "repository": "https://github.com/concision/esm-loaders.git"
+}
