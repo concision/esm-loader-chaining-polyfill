@@ -1,5 +1,5 @@
 {
-  "name": "coffeescript",
+  "name": "@esm-loaders/coffeescript",
   "version": "0.1.0",
   "description": "Composable Node.js CoffeeScript ESM experimental loader",
   "author": "Concision <contact@concision.me>",

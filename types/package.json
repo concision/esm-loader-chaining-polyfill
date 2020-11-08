@@ -1,5 +1,5 @@
 {
-  "name": "types",
+  "name": "@esm-loaders/types",
   "version": "0.1.0",
   "description": "Typings for Node.js' experimental ESM loaders",
   "author": "Concision <contact@concision.me>",

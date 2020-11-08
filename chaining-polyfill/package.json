@@ -1,5 +1,5 @@
 {
-  "name": "chaining-polyfill",
+  "name": "@esm-loaders/chaining-polyfill",
   "version": "0.1.0",
   "description": "Enable chaining multiple Node.js ESM '--experimental-loader's",
   "author": "Concision <contact@concision.me>",
