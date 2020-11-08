@@ -1,0 +1,11 @@
+{
+  "name": "esm-loaders",
+  "version": "0.1.0",
+  "description": "Composable Node.js ESM '--experimental-loader's",
+  "author": "Concision <contact@concision.me>",
+  "license": "MIT",
+  "repository": "https://github.com/concision/esm-loaders.git",
+  "workspaces": [
+    "chaining-polyfill"
+  ]
+}
