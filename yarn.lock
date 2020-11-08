@@ -3454,9 +3454,9 @@ to-through@^2.0.0:
   dependencies:
     through2 "^2.0.3"
 
-"ts-node@https://github.com/TypeStrong/ts-node.git":
+"ts-node@git+https://github.com/TypeStrong/ts-node.git":
   version "9.0.0"
-  resolved "https://github.com/TypeStrong/ts-node.git#d0468792ebbbd16eb62755124d5be22223ab2ba8"
+  resolved "git+https://github.com/TypeStrong/ts-node.git#d0468792ebbbd16eb62755124d5be22223ab2ba8"
   dependencies:
     arg "^4.1.0"
     diff "^4.0.1"

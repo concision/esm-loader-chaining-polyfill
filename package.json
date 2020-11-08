@@ -42,7 +42,7 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulpclass": "^0.2.0",
-    "ts-node": "https://github.com/TypeStrong/ts-node.git",
+    "ts-node": "git+https://github.com/TypeStrong/ts-node.git",
     "typescript": "^4.0.5"
   }
 }
