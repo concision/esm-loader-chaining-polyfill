@@ -1,10 +1,10 @@
 {
-  "name": "esm-loader-chaining",
+  "name": "chaining-polyfill",
   "version": "0.1.0",
   "description": "Enable chaining multiple Node.js ESM '--experimental-loader's",
   "author": "Concision <contact@concision.me>",
   "license": "MIT",
-  "repository": "https://github.com/concision/esm-pipeline-loader",
+  "repository": "https://github.com/concision/esm-loaders.git",
   "type": "module",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
