@@ -20,5 +20,7 @@ export const FunctionPrototypeBind = uncurryThis(Function.prototype.bind);
 export const JSONStringify = JSON.stringify;
 export const ObjectValues = Object.values;
 export const PromiseResolve = Promise.resolve.bind(Promise);
+export const StringPrototypeIndexOf = uncurryThis(String.prototype.indexOf);
 export const StringPrototypeStartsWith = uncurryThis(String.prototype.startsWith);
+export const StringPrototypeSubstring = uncurryThis(String.prototype.substring);
 export const URLPrototypeToString = uncurryThis(URL.prototype.toString);

@@ -11,7 +11,9 @@ import {
     ArrayPrototypeSplice,
     ObjectValues,
     PromiseResolve,
+    StringPrototypeIndexOf,
     StringPrototypeStartsWith,
+    StringPrototypeSubstring,
     URLPrototypeToString,
 } from "../internal/Primordials.js";
 import {ExtractedEsmLoaderHooks, newEsmLoaderFromHooks} from "./EsmChainingLoader.js";
@@ -37,11 +39,11 @@ export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Pr
         let loaderName;
         if (nodeArg === "--loader" || nodeArg === "--experimental-loader") {
             loaderName = nodeArgs[i + 1];
-        } else if (nodeArg.startsWith("--loader=") || nodeArg.startsWith("--experimental-loader=")) {
-            loaderName = nodeArg.substring(nodeArg.indexOf("=") + 1);
+        } else if (StringPrototypeStartsWith(nodeArg, "--loader=") || StringPrototypeStartsWith(nodeArg, "--experimental-loader=")) {
+            loaderName = StringPrototypeSubstring(nodeArg, StringPrototypeIndexOf(nodeArg, "=") + 1);
         }
         if (typeof loaderName !== "undefined") {
-            esmLoaderNames.push(loaderName);
+            ArrayPrototypePush(esmLoaderNames, loaderName);
         }
     }
 
@@ -118,7 +120,7 @@ export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Pr
     // compile all known CommonJS hooks
     extractEsmLoaderHooks(hooks, esmLoaders);
 
-    // asynchronously import all ES module ESM loaders
+    // asynchronously await all ES module ESM loaders
     const asynchronousInitialization: Promise<void> = (async () => {
         // await all asynchronously imported ES modules
         for (let i = 0; i < esmLoaders.length; i++) {
