@@ -13,11 +13,11 @@ const uncurryThis = <T, A extends unknown[], R>(func: (this: T, ...args: A) => R
 };
 
 export const ArrayPrototypeJoin = uncurryThis(Array.prototype.join);
+export const ArrayPrototypePop = uncurryThis(Array.prototype.pop);
 export const ArrayPrototypePush = uncurryThis(Array.prototype.push);
 export const ArrayPrototypeSplice = uncurryThis(Array.prototype.splice);
 export const FunctionPrototypeBind = uncurryThis(Function.prototype.bind);
 export const JSONStringify = JSON.stringify;
-export const Map = global.Map;
 export const ObjectValues = Object.values;
 export const PromiseResolve = Promise.resolve.bind(Promise);
 export const StringPrototypeStartsWith = uncurryThis(String.prototype.startsWith);

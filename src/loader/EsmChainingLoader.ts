@@ -17,6 +17,7 @@ import {
 } from "../typings";
 import {
     ArrayPrototypeJoin,
+    ArrayPrototypePop,
     ArrayPrototypePush,
     FunctionPrototypeBind,
     JSONStringify,
@@ -38,26 +39,26 @@ export function newEsmLoaderFromHooks(hooks: ExtractedEsmLoaderHooks, asynchrono
         const reference: { defaultHook?: H } = {};
 
         // build chain hook
-        let chainHook = async function (this: unknown, ...args: Head<Parameters<H>>): Promise<AsyncReturnType<H>> {
+        let chainHook = async function (...args: Head<Parameters<H>>): Promise<AsyncReturnType<H>> {
             // @ts-ignore
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             return <AsyncReturnType<H>>await reference.defaultHook!(...args, reference.defaultHook!);
         };
+        // compose hooks
         for (let i = hooks.length - 1; 0 <= i; i--) {
             // closure definitions
             const currentHook = hooks[i];
             const nextChainHook = chainHook;
 
             // try resolution or cascade
-            const selfChainHook = chainHook = async function (this: unknown, ...args: Head<Parameters<H>>): Promise<AsyncReturnType<H>> {
+            const selfChainHook = chainHook = async function (...args: Head<Parameters<H>>): Promise<AsyncReturnType<H>> {
                 // if default specified hook is self, strip it to prevent infinite recursion
                 if (args[args.length - 1] === selfChainHook) {
-                    args.pop();
+                    ArrayPrototypePop(args);
                 }
 
                 // @ts-ignore
                 const result = await currentHook(...args, nextChainHook);
-
                 if (result === null) {
                     return await nextChainHook(...args);
                 }
@@ -68,7 +69,7 @@ export function newEsmLoaderFromHooks(hooks: ExtractedEsmLoaderHooks, asynchrono
         // invoke chain hook with the correct default parameter
         return <H><unknown>async function (...args: [...Head<Parameters<H>>, H]): Promise<AsyncReturnType<H>> {
             const hookArgs = <Head<Parameters<H>>><unknown>args;
-            const defaultHook: H = <H>args.pop();
+            const defaultHook: H = ArrayPrototypePop(args);
 
             // restored if any hook imports another module
             const previousDefaultHook = reference.defaultHook;
