@@ -7,7 +7,8 @@
   "repository": "https://github.com/concision/esm-loaders.git",
   "private": true,
   "workspaces": [
-    "chaining-polyfill"
+    "chaining-polyfill",
+    "http"
   ],
   "devDependencies": {
     "@types/node": "^14.14.6",
