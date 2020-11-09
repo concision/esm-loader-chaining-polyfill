@@ -117,7 +117,7 @@ export class Gulpfile {
      */
     @gulpclass.Task("includes:docs")
     public includeTask(): unknown {
-        return gulp.src(["README.md", "LICENSE"], {base: __dirname})
+        return gulp.src(["README.md", "../LICENSE"], {base: __dirname})
             // write to target build directory
             .pipe(gulp.dest(this.target));
     }
@@ -127,7 +127,7 @@ export class Gulpfile {
      */
     @gulpclass.Task("includes:typings")
     public includeTypingsTask(): unknown {
-        return gulp.src(["**/typings/index.d.ts"], {base: resolve(this.root, "typings")})
+        return gulp.src(["**/index.d.ts"], {base: this.root})
             // write to target build directory
             .pipe(gulp.dest(this.target));
     }
