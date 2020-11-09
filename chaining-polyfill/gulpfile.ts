@@ -55,7 +55,7 @@ export class Gulpfile {
      */
     @gulpclass.SequenceTask("build")
     public buildTask(): string[] {
-        return ["clean", "transpile", "lint", "includes:typings"];
+        return ["clean", "lint", "transpile", "includes:typings"];
     }
 
     /**
@@ -117,9 +117,14 @@ export class Gulpfile {
      */
     @gulpclass.Task("includes:docs")
     public includeTask(): unknown {
-        return gulp.src(["README.md", "../LICENSE"], {base: __dirname})
-            // write to target build directory
-            .pipe(gulp.dest(this.target));
+        return Promise.all([
+            gulp.src(["README.md"], {cwd: __dirname})
+                // write to target build directory
+                .pipe(gulp.dest(this.target)),
+            gulp.src(["LICENSE"], {cwd: resolve(__dirname, "..")})
+                // write to target build directory
+                .pipe(gulp.dest(this.target)),
+        ]);
     }
 
     /**
@@ -127,7 +132,7 @@ export class Gulpfile {
      */
     @gulpclass.Task("includes:typings")
     public includeTypingsTask(): unknown {
-        return gulp.src(["**/index.d.ts"], {base: this.root})
+        return gulp.src(["**/index.d.ts"], {cwd: this.root})
             // write to target build directory
             .pipe(gulp.dest(this.target));
     }
