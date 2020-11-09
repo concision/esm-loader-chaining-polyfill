@@ -27,7 +27,7 @@
     "prepack": "gulp --no-warnings --loader=ts-node/esm prepack"
   },
   "devDependencies": {
-    "@esm-loaders/types": "link:../types",
+    "@esm-loaders/types": "link:../loader-types",
     "@types/del": "^4.0.0",
     "@types/gulp": "^4.0.7",
     "@types/gulp-sourcemaps": "^0.0.32",
