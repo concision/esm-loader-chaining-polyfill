@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "clean": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color clean",
-    "lint": "eslint --config .eslintrc.json --ext .ts --color src",
+    "lint": "eslint --config ../.eslintrc.json --ext .ts --color src",
     "build": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color build",
     "build:dev": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color build:dev",
     "prepack": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color prepack"
