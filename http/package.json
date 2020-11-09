@@ -5,6 +5,7 @@
   "author": "Concision <contact@concision.me>",
   "license": "MIT",
   "repository": "https://github.com/concision/esm-loaders.git",
+  "type": "module",
   "typings": "dist/index.d.ts",
   "main": "dist/index.js",
   "exports": {
