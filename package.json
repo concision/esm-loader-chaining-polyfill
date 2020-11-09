@@ -8,7 +8,7 @@
   "private": true,
   "workspaces": [
     "loader-types",
-    "chaining-polyfill",
+    "chain-polyfill",
     "http",
     "typescript",
     "coffescript"

@@ -6,11 +6,11 @@
     <a href="https://github.com/concision/esm-loaders/blob/master/LICENSE">
         <img alt="repository license" src="https://img.shields.io/github/license/concision/esm-loaders?style=for-the-badge"/>
     </a>
-    <a href="https://www.npmjs.com/package/@esm-loaders/chaining-polyfill">
-        <img alt="repository license" src="https://img.shields.io/npm/v/@esm-loaders/chaining-polyfill?color=red&logo=npm&style=for-the-badge"/>
+    <a href="https://www.npmjs.com/package/@esm-loaders/chain-polyfill">
+        <img alt="repository license" src="https://img.shields.io/npm/v/@esm-loaders/chain-polyfill?color=red&logo=npm&style=for-the-badge"/>
     </a>
-    <a href="https://bundlephobia.com/result?p=@esm-loaders/chaining-polyfill">
-        <img alt="repository license" src="https://img.shields.io/bundlephobia/min/@esm-loaders/chaining-polyfill?color=green&label=Size&logo=node.js&logoColor=green&style=for-the-badge"/>
+    <a href="https://bundlephobia.com/result?p=@esm-loaders/chain-polyfill">
+        <img alt="repository license" src="https://img.shields.io/bundlephobia/min/@esm-loaders/chain-polyfill?color=green&label=Size&logo=node.js&logoColor=green&style=for-the-badge"/>
     </a>
 </p>
 
