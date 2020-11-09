@@ -4,5 +4,8 @@
   "description": "Composable Node.js HTTP/HTTPS ESM experimental loader",
   "author": "Concision <contact@concision.me>",
   "license": "MIT",
-  "repository": "https://github.com/concision/esm-loaders.git"
+  "repository": "https://github.com/concision/esm-loaders.git",
+  "devDependencies": {
+    "@esm-loaders/types": "link:../loader-types"
+  }
 }
