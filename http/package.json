@@ -6,6 +6,10 @@
   "license": "MIT",
   "repository": "https://github.com/concision/esm-loaders.git",
   "typings": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "devDependencies": {
     "@esm-loaders/types": "link:../loader-types"
   }
