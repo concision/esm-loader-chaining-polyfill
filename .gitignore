@@ -2,8 +2,8 @@
 playground/
 
 
-# Created by https://www.toptal.com/developers/gitignore/api/git,intellij+all,linux,macos,node,sublimetext,visualstudiocode,windows
-# Edit at https://www.toptal.com/developers/gitignore?templates=git,intellij+all,linux,macos,node,sublimetext,visualstudiocode,windows
+# Created by https://www.toptal.com/developers/gitignore/api/git,node,yarn,macos,linux,windows,sublimetext,intellij+all,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=git,node,yarn,macos,linux,windows,sublimetext,intellij+all,visualstudiocode
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
@@ -335,4 +335,20 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/git,intellij+all,linux,macos,node,sublimetext,visualstudiocode,windows
+### yarn ###
+# https://yarnpkg.com/advanced/qa#which-files-should-be-gitignored
+
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+
+# if you are NOT using Zero-installs, then:
+# comment the following lines
+#!.yarn/cache
+
+# and uncomment the following lines
+.pnp.*
+
+# End of https://www.toptal.com/developers/gitignore/api/git,node,yarn,macos,linux,windows,sublimetext,intellij+all,visualstudiocode
