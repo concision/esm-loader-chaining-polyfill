@@ -12,6 +12,6 @@
     ".": "./dist/index.js"
   },
   "devDependencies": {
-    "@esm-loaders/types": "link:../loader-types"
+    "@esm-loaders/types": "link:../types"
   }
 }

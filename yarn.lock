@@ -39,8 +39,9 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@esm-loaders/types@link:loader-types":
-  version "0.1.0"
+"@esm-loaders/types@link:types":
+  version "0.0.0"
+  uid ""
 
 "@gulp-sourcemaps/identity-map@1.X":
   version "1.0.2"
