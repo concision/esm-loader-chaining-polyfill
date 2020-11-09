@@ -20,11 +20,11 @@
     "README.md"
   ],
   "scripts": {
-    "clean": "gulp --no-warnings --loader=ts-node/esm clean",
+    "clean": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp clean",
     "lint": "eslint --config .eslintrc.json --ext .ts --color src",
-    "build": "gulp --no-warnings --loader=ts-node/esm build",
-    "build:dev": "gulp --no-warnings --loader=ts-node/esm build:dev",
-    "prepack": "gulp --no-warnings --loader=ts-node/esm prepack"
+    "build": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp build",
+    "build:dev": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp build:dev",
+    "prepack": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp prepack"
   },
   "devDependencies": {
     "@esm-loaders/types": "link:../types",
