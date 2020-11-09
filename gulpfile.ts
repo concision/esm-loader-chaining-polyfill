@@ -154,6 +154,9 @@ export class Gulpfile {
         const typesPackageJson = JSON.parse(readFileSync(resolve(__root_dirname, "package.json"), "utf8"));
         (packageJson["peerDependencies"] ??= {})["@esm-loaders/types"] = `^${typesPackageJson["version"]}`;
 
+        // update @esm-loaders/types' version in dev dependencies
+        packageJson["devDependencies"]["@esm-loaders/types"] = `^${typesPackageJson["version"]}`;
+
         // relink 'dist' references
         packageJson["main"] = packageJson["main"]?.replace("dist/", "");
         packageJson["typings"] = packageJson["typings"]?.replace("dist/", "");
