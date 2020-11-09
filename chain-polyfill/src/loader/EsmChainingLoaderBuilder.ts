@@ -10,6 +10,7 @@ import {
     ArrayPrototypePush,
     ArrayPrototypeSplice,
     ObjectValues,
+    Promise,
     PromiseResolve,
     StringPrototypeIndexOf,
     StringPrototypeStartsWith,
