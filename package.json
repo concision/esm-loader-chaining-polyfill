@@ -6,22 +6,18 @@
   "license": "MIT",
   "repository": "https://github.com/concision/esm-loaders.git",
   "private": true,
+  "type": "module",
   "workspaces": [
     "loader-types",
     "chain-polyfill",
     "http",
     "typescript",
-    "coffescript"
+    "coffeescript"
   ],
   "scripts": {
-    "clean": "yarn workspaces foreach run clean",
-    "lint": "yarn workspaces foreach run clean",
-    "build": "yarn workspaces foreach run build",
-    "prepack": "yarn workspaces foreach run prepack"
-  },
-  "devDependencies": {
-    "@types/node": "^14.14.6",
-    "ts-node": "git+https://github.com/TypeStrong/ts-node.git",
-    "typescript": "^4.0.5"
+    "clean": "yarn workspaces foreach --verbose run clean",
+    "lint": "yarn workspaces foreach --verbose run clean",
+    "build": "yarn workspaces foreach --verbose run build",
+    "prepack": "yarn workspaces foreach --verbose run prepack"
   }
 }

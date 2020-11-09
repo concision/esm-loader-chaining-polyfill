@@ -3,11 +3,11 @@ import gulpclass from "gulpclass";
 import typescript, {Project} from "gulp-typescript";
 import del from "del";
 import run from "gulp-run";
-import path, {resolve} from "path";
+import {dirname, join, resolve} from "path";
 import {readFileSync, writeFileSync} from "fs";
-import {URL} from "url";
 import File from "vinyl";
 import sourcemaps from "gulp-sourcemaps";
+import {URL} from "url";
 
 declare module "gulp-sourcemaps" {
     export interface WriteOptions {
@@ -15,8 +15,8 @@ declare module "gulp-sourcemaps" {
     }
 }
 
-// source: https://stackoverflow.com/a/53582084
-const __dirname = path.join(path.dirname(decodeURI(new URL(import.meta.url).pathname))).replace(/^\\([A-Z]:\\)/, "$1");
+const __root_dirname = join(dirname(decodeURI(new URL(import.meta.url).pathname))).replace(/^\\([A-Z]:\\)/, "$1");
+const __project_dirname = process.cwd();
 
 @gulpclass.Gulpclass()
 export class Gulpfile {
@@ -26,18 +26,18 @@ export class Gulpfile {
      * TypeScript runtime project configuration
      * @private
      */
-    private readonly project: Project = typescript.createProject(resolve(__dirname, "tsconfig.json"));
+    private readonly project: Project = typescript.createProject(resolve(__project_dirname, "tsconfig.json"));
 
     /**
      * Root source directory
      * @private
      */
-    private readonly root: string = resolve(__dirname, this.project.config.compilerOptions.rootDir);
+    private readonly root: string = resolve(__project_dirname, this.project.config.compilerOptions.rootDir);
     /**
      * Targeted output directory
      * @private
      */
-    private readonly target: string = resolve(__dirname, this.project.config.compilerOptions.outDir);
+    private readonly target: string = resolve(__project_dirname, this.project.config.compilerOptions.outDir);
 
 
     // grouped tasks
@@ -82,7 +82,7 @@ export class Gulpfile {
      */
     @gulpclass.Task("lint")
     public lintTask(): void {
-        return run("yarn run lint", {cwd: __dirname, verbosity: 3}).exec();
+        return run("yarn run lint", {cwd: __project_dirname, verbosity: 3}).exec();
     }
 
     /**
@@ -97,7 +97,9 @@ export class Gulpfile {
             ...(this.project.config.include ?? []),
             // blacklist excluded globs, if specified; map to negated glob filter
             ...(this.project.config.exclude?.map((pattern: string) => `!${pattern}`) ?? []),
-        ].filter(source => source != "gulpfile.ts");
+        ]
+            // exclude gulpfile.ts
+            .filter(source => !source.includes("gulpfile.ts"));
 
         return gulp.src(sources, {allowEmpty: true, base: this.root})
             .pipe(sourcemaps.init({loadMaps: true}))
@@ -118,10 +120,10 @@ export class Gulpfile {
     @gulpclass.Task("includes:docs")
     public includeTask(): unknown {
         return Promise.all([
-            gulp.src(["README.md"], {cwd: __dirname})
+            gulp.src(["README.md"], {cwd: __project_dirname, allowEmpty: true})
                 // write to target build directory
                 .pipe(gulp.dest(this.target)),
-            gulp.src(["LICENSE"], {cwd: resolve(__dirname, "..")})
+            gulp.src(["LICENSE"], {cwd: resolve(__project_dirname, "..")})
                 // write to target build directory
                 .pipe(gulp.dest(this.target)),
         ]);
@@ -143,18 +145,23 @@ export class Gulpfile {
     @gulpclass.Task("package")
     public async packageTask(): Promise<void> {
         // read package.json
-        const packageJson = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf8"));
+        const packageJson = JSON.parse(readFileSync(resolve(__project_dirname, "package.json"), "utf8"));
 
         // delete unnecessary tags
         delete packageJson["scripts"];
-        delete packageJson["devDependencies"];
+
+        // set peer dependency on '@esm-loaders/types'
+        const typesPackageJson = JSON.parse(readFileSync(resolve(__root_dirname, "package.json"), "utf8"));
+        (packageJson["peerDependencies"] ??= {})["@esm-loaders/types"] = `^${typesPackageJson["version"]}`;
 
         // relink 'dist' references
-        packageJson["main"] = packageJson["main"].replace("dist/", "");
-        packageJson["typings"] = packageJson["typings"].replace("dist/", "");
+        packageJson["main"] = packageJson["main"]?.replace("dist/", "");
+        packageJson["typings"] = packageJson["typings"]?.replace("dist/", "");
         const exports = packageJson["exports"];
-        for (const exportKey of Object.keys(exports)) {
-            exports[exportKey] = exports[exportKey].replace("dist/", "");
+        if (exports) {
+            for (const exportKey of Object.keys(exports)) {
+                exports[exportKey] = exports[exportKey].replace("dist/", "");
+            }
         }
 
         // write package.json

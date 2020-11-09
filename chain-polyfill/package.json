@@ -20,11 +20,11 @@
     "README.md"
   ],
   "scripts": {
-    "clean": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color clean",
+    "clean": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --cwd . --gulpfile ../gulpfile.ts clean",
     "lint": "eslint --config ../.eslintrc.json --ext .ts --color src",
-    "build": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color build",
-    "build:dev": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color build:dev",
-    "prepack": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color prepack"
+    "build": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --cwd . --gulpfile ../gulpfile.ts build",
+    "build:dev": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --cwd . --gulpfile ../gulpfile.ts build:dev",
+    "prepack": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --cwd . --gulpfile ../gulpfile.ts prepack"
   },
   "devDependencies": {
     "@esm-loaders/types": "link:../types",
