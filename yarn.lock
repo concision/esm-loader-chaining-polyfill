@@ -50,130 +50,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@esm-loaders/chain-polyfill@workspace:chain-polyfill":
-  version: 0.0.0-use.local
-  resolution: "@esm-loaders/chain-polyfill@workspace:chain-polyfill"
-  dependencies:
-    "@esm-loaders/types": "link:../types"
-    "@types/del": ^4.0.0
-    "@types/gulp": ^4.0.7
-    "@types/gulp-sourcemaps": ^0.0.32
-    "@types/gulp-typescript": ^2.13.0
-    "@types/node": ^14.14.6
-    "@types/vinyl": ^2.0.4
-    "@typescript-eslint/eslint-plugin": ^4.6.0
-    "@typescript-eslint/parser": ^4.6.0
-    del: ^6.0.0
-    eslint: ^7.12.1
-    gulp: ^4.0.2
-    gulp-run: ^1.7.1
-    gulp-sourcemaps: ^2.6.5
-    gulp-typescript: ^6.0.0-alpha.1
-    gulpclass: ^0.2.0
-    ts-node: "git+https://github.com/TypeStrong/ts-node.git"
-    typescript: ^4.0.5
-  languageName: unknown
-  linkType: soft
-
-"@esm-loaders/coffeescript@workspace:coffeescript":
-  version: 0.0.0-use.local
-  resolution: "@esm-loaders/coffeescript@workspace:coffeescript"
-  dependencies:
-    "@esm-loaders/types": "link:../types"
-    "@types/del": ^4.0.0
-    "@types/gulp": ^4.0.7
-    "@types/gulp-sourcemaps": ^0.0.32
-    "@types/gulp-typescript": ^2.13.0
-    "@types/node": ^14.14.6
-    "@types/vinyl": ^2.0.4
-    "@typescript-eslint/eslint-plugin": ^4.6.0
-    "@typescript-eslint/parser": ^4.6.0
-    del: ^6.0.0
-    eslint: ^7.12.1
-    gulp: ^4.0.2
-    gulp-run: ^1.7.1
-    gulp-sourcemaps: ^2.6.5
-    gulp-typescript: ^6.0.0-alpha.1
-    gulpclass: ^0.2.0
-    ts-node: "git+https://github.com/TypeStrong/ts-node.git"
-    typescript: ^4.0.5
-  languageName: unknown
-  linkType: soft
-
-"@esm-loaders/http@workspace:http":
-  version: 0.0.0-use.local
-  resolution: "@esm-loaders/http@workspace:http"
-  dependencies:
-    "@esm-loaders/types": "link:../types"
-    "@types/del": ^4.0.0
-    "@types/gulp": ^4.0.7
-    "@types/gulp-sourcemaps": ^0.0.32
-    "@types/gulp-typescript": ^2.13.0
-    "@types/node": ^14.14.6
-    "@types/vinyl": ^2.0.4
-    "@typescript-eslint/eslint-plugin": ^4.6.0
-    "@typescript-eslint/parser": ^4.6.0
-    del: ^6.0.0
-    eslint: ^7.12.1
-    gulp: ^4.0.2
-    gulp-run: ^1.7.1
-    gulp-sourcemaps: ^2.6.5
-    gulp-typescript: ^6.0.0-alpha.1
-    gulpclass: ^0.2.0
-    ts-node: "git+https://github.com/TypeStrong/ts-node.git"
-    typescript: ^4.0.5
-  languageName: unknown
-  linkType: soft
-
-"@esm-loaders/types@link:../types::locator=%40esm-loaders%2Fchain-polyfill%40workspace%3Achain-polyfill":
-  version: 0.0.0-use.local
-  resolution: "@esm-loaders/types@link:../types::locator=%40esm-loaders%2Fchain-polyfill%40workspace%3Achain-polyfill"
-  languageName: node
-  linkType: soft
-
-"@esm-loaders/types@link:../types::locator=%40esm-loaders%2Fcoffeescript%40workspace%3Acoffeescript":
-  version: 0.0.0-use.local
-  resolution: "@esm-loaders/types@link:../types::locator=%40esm-loaders%2Fcoffeescript%40workspace%3Acoffeescript"
-  languageName: node
-  linkType: soft
-
-"@esm-loaders/types@link:../types::locator=%40esm-loaders%2Fhttp%40workspace%3Ahttp":
-  version: 0.0.0-use.local
-  resolution: "@esm-loaders/types@link:../types::locator=%40esm-loaders%2Fhttp%40workspace%3Ahttp"
-  languageName: node
-  linkType: soft
-
-"@esm-loaders/types@link:../types::locator=%40esm-loaders%2Ftypescript%40workspace%3Atypescript":
-  version: 0.0.0-use.local
-  resolution: "@esm-loaders/types@link:../types::locator=%40esm-loaders%2Ftypescript%40workspace%3Atypescript"
-  languageName: node
-  linkType: soft
-
-"@esm-loaders/typescript@workspace:typescript":
-  version: 0.0.0-use.local
-  resolution: "@esm-loaders/typescript@workspace:typescript"
-  dependencies:
-    "@esm-loaders/types": "link:../types"
-    "@types/del": ^4.0.0
-    "@types/gulp": ^4.0.7
-    "@types/gulp-sourcemaps": ^0.0.32
-    "@types/gulp-typescript": ^2.13.0
-    "@types/node": ^14.14.6
-    "@types/vinyl": ^2.0.4
-    "@typescript-eslint/eslint-plugin": ^4.6.0
-    "@typescript-eslint/parser": ^4.6.0
-    del: ^6.0.0
-    eslint: ^7.12.1
-    gulp: ^4.0.2
-    gulp-run: ^1.7.1
-    gulp-sourcemaps: ^2.6.5
-    gulp-typescript: ^6.0.0-alpha.1
-    gulpclass: ^0.2.0
-    ts-node: "git+https://github.com/TypeStrong/ts-node.git"
-    typescript: ^4.0.5
-  languageName: unknown
-  linkType: soft
-
 "@gulp-sourcemaps/identity-map@npm:1.X":
   version: 1.0.2
   resolution: "@gulp-sourcemaps/identity-map@npm:1.0.2"
@@ -1799,9 +1675,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esm-loaders@workspace:.":
+"esm-loader-chaining-polyfill@workspace:.":
   version: 0.0.0-use.local
-  resolution: "esm-loaders@workspace:."
+  resolution: "esm-loader-chaining-polyfill@workspace:."
+  dependencies:
+    "@types/del": ^4.0.0
+    "@types/gulp": ^4.0.7
+    "@types/gulp-sourcemaps": ^0.0.32
+    "@types/gulp-typescript": ^2.13.0
+    "@types/node": ^14.14.6
+    "@types/vinyl": ^2.0.4
+    "@typescript-eslint/eslint-plugin": ^4.6.0
+    "@typescript-eslint/parser": ^4.6.0
+    del: ^6.0.0
+    eslint: ^7.12.1
+    gulp: ^4.0.2
+    gulp-run: ^1.7.1
+    gulp-sourcemaps: ^2.6.5
+    gulp-typescript: ^6.0.0-alpha.1
+    gulpclass: ^0.2.0
+    ts-node: "git+https://github.com/TypeStrong/ts-node.git"
+    typescript: ^4.0.5
   languageName: unknown
   linkType: soft
 

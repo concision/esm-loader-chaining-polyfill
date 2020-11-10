@@ -67,3 +67,10 @@ export interface TransformSourceResult {
 export interface TransformSourceHook {
     (source: Source, context: TransformSourceContext, nextTransformSource: TransformSourceHook): Promise<TransformSourceResult>;
 }
+
+
+export const getGlobalPreloadCode: GlobalPreloadCodeHook | undefined;
+export const resolve: ResolveHook | undefined;
+export const getFormat: ModuleFormatHook | undefined;
+export const getSource: SourceHook | undefined;
+export const transformSource: TransformSourceHook | undefined;

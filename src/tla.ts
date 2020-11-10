@@ -1,4 +1,4 @@
-import {EsmLoaderHook} from "@esm-loaders/types";
+import {EsmLoaderHook} from "./";
 import {createEsmLoader} from "./loader/EsmChainingLoaderBuilder.js";
 
 export const {

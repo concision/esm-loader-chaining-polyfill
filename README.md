@@ -1,33 +1,46 @@
 <h1 align="center">
-    Node.js ESM Loaders
+    ESM Loader Chaining "Polyfill"
 </h1>
 
 <p align="center">
-    <a href="https://github.com/concision/esm-loaders/blob/master/LICENSE">
-        <img alt="repository license" src="https://img.shields.io/github/license/concision/esm-loaders?style=for-the-badge"/>
+    <a href="https://github.com/concision/esm-loader-chaining-polyfill/blob/master/LICENSE">
+        <img alt="repository license" src="https://img.shields.io/github/license/concision/esm-loader-chaining-polyfill?style=for-the-badge"/>
+    </a>
+    <a href="https://www.npmjs.com/package/esm-loader-chaining-polyfill">
+        <img alt="repository license" src="https://img.shields.io/npm/v/esm-loader-chaining-polyfill?color=red&logo=npm&style=for-the-badge"/>
+    </a>
+    <a href="https://bundlephobia.com/result?p=esm-loader-chaining-polyfill">
+        <img alt="repository license" src="https://img.shields.io/bundlephobia/min/esm-loader-chaining-polyfill?color=green&label=Size&logo=node.js&logoColor=green&style=for-the-badge"/>
     </a>
 </p>
 
 <p align="center">
-    <i>Composable <a href="https://nodejs.org/api/esm.html#esm_experimental_loaders">EcmaScript module loader</a> implementations for <a href="https://nodejs.org/en/">Node.js</a>.</i>
+    <i>A "polyfill" for chaining several <a href="https://nodejs.org/api/esm.html#esm_experimental_loaders">ESM loaders</a> for <a href="https://nodejs.org/en/">Node.js</a>.</i>
 </p>
 
 
 ## Table of Contents
 
 - [About](#about)
-- [Motivations](#motivations)
-- [ESM Loader List](#esm-loader-list)
+- [Usage](#usage)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
 - [License](#license)
 
 
 ## About
 
 
-## Motivations
+## Usage
 
 
-## ESM Loader List
+### Installation
+
+
+### Configuration
+
+
+## Limitations
 
 
 ## License

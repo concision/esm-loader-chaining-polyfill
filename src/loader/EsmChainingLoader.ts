@@ -14,7 +14,7 @@ import {
     TransformSourceContext,
     TransformSourceHook,
     TransformSourceResult,
-} from "@esm-loaders/types";
+} from "../";
 import {
     ArrayPrototypeJoin,
     ArrayPrototypePop,

@@ -1,5 +1,5 @@
-import {EsmLoaderHook} from "@esm-loaders/types";
 import {createEsmLoader} from "./loader/EsmChainingLoaderBuilder.js";
+import {EsmLoaderHook} from "./";
 
 process.emitWarning(
     "esm-loader-chaining/no-tla: --experimental-top-level-await or --harmony-top-level-await must be specified" +

@@ -15,8 +15,8 @@ declare module "gulp-sourcemaps" {
     }
 }
 
-const __root_dirname = join(dirname(decodeURI(new URL(import.meta.url).pathname))).replace(/^\\([A-Z]:\\)/, "$1");
-const __project_dirname = process.cwd();
+
+const __dirname = join(dirname(decodeURI(new URL(import.meta.url).pathname))).replace(/^\\([A-Z]:\\)/, "$1");
 
 @gulpclass.Gulpclass()
 export class Gulpfile {
@@ -26,18 +26,18 @@ export class Gulpfile {
      * TypeScript runtime project configuration
      * @private
      */
-    private readonly project: Project = typescript.createProject(resolve(__project_dirname, "tsconfig.json"));
+    private readonly project: Project = typescript.createProject(resolve(__dirname, "tsconfig.json"));
 
     /**
      * Root source directory
      * @private
      */
-    private readonly root: string = resolve(__project_dirname, this.project.config.compilerOptions.rootDir);
+    private readonly root: string = resolve(__dirname, this.project.config.compilerOptions.rootDir);
     /**
      * Targeted output directory
      * @private
      */
-    private readonly target: string = resolve(__project_dirname, this.project.config.compilerOptions.outDir);
+    private readonly target: string = resolve(__dirname, this.project.config.compilerOptions.outDir);
 
 
     // grouped tasks
@@ -82,7 +82,7 @@ export class Gulpfile {
      */
     @gulpclass.Task("lint")
     public lintTask(): void {
-        return run("yarn run lint", {cwd: __project_dirname, verbosity: 3}).exec();
+        return run("yarn run lint", {cwd: __dirname, verbosity: 3}).exec();
     }
 
     /**
@@ -120,10 +120,10 @@ export class Gulpfile {
     @gulpclass.Task("includes:docs")
     public includeTask(): unknown {
         return Promise.all([
-            gulp.src(["README.md"], {cwd: __project_dirname, allowEmpty: true})
+            gulp.src(["README.md"], {cwd: __dirname})
                 // write to target build directory
                 .pipe(gulp.dest(this.target)),
-            gulp.src(["LICENSE"], {cwd: resolve(__project_dirname, "..")})
+            gulp.src(["LICENSE"], {cwd: __dirname})
                 // write to target build directory
                 .pipe(gulp.dest(this.target)),
         ]);
@@ -145,17 +145,11 @@ export class Gulpfile {
     @gulpclass.Task("package")
     public async packageTask(): Promise<void> {
         // read package.json
-        const packageJson = JSON.parse(readFileSync(resolve(__project_dirname, "package.json"), "utf8"));
+        const packageJson = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf8"));
 
         // delete unnecessary tags
         delete packageJson["scripts"];
-
-        // set peer dependency on '@esm-loaders/types'
-        const typesPackageJson = JSON.parse(readFileSync(resolve(__root_dirname, "package.json"), "utf8"));
-        (packageJson["peerDependencies"] ??= {})["@esm-loaders/types"] = `^${typesPackageJson["version"]}`;
-
-        // update @esm-loaders/types' version in dev dependencies
-        packageJson["devDependencies"]["@esm-loaders/types"] = `^${typesPackageJson["version"]}`;
+        delete packageJson["files"];
 
         // relink 'dist' references
         packageJson["main"] = packageJson["main"]?.replace("dist/", "");

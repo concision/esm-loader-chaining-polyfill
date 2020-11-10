@@ -1,23 +1,50 @@
 {
-  "name": "esm-loaders",
+  "name": "esm-loader-chaining-polyfill",
   "version": "0.1.0",
-  "description": "Composable Node.js ESM '--experimental-loader's",
+  "description": "Enable chaining multiple Node.js ESM '--experimental-loader's",
   "author": "Concision <contact@concision.me>",
   "license": "MIT",
-  "repository": "https://github.com/concision/esm-loaders.git",
-  "private": true,
+  "repository": "https://github.com/concision/esm-loader-chaining-polyfill.git",
   "type": "module",
-  "workspaces": [
-    "loader-types",
-    "chain-polyfill",
-    "http",
-    "typescript",
-    "coffeescript"
+  "main": "dist/tla.js",
+  "typings": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/tla.js",
+    "./tla": "./dist/tla.js",
+    "./tla.js": "./dist/tla.js",
+    "./no-tla": "./dist/no-tla.js",
+    "./no-tla.js": "./dist/no-tla.js"
+  },
+  "files": [
+    "dist/",
+    "package.json",
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
-    "clean": "yarn workspaces foreach --verbose run clean",
-    "lint": "yarn workspaces foreach --verbose run clean",
-    "build": "yarn workspaces foreach --verbose run build",
-    "prepack": "yarn workspaces foreach --verbose run prepack"
+    "clean": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --gulpfile gulpfile.ts clean",
+    "lint": "eslint --config .eslintrc.json --ext .ts --color gulpfile.ts src",
+    "build": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --gulpfile gulpfile.ts build",
+    "build:dev": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --gulpfile gulpfile.ts build:dev",
+    "prepack": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --gulpfile gulpfile.ts prepack"
+  },
+  "devDependencies": {
+    "@types/del": "^4.0.0",
+    "@types/gulp": "^4.0.7",
+    "@types/gulp-sourcemaps": "^0.0.32",
+    "@types/gulp-typescript": "^2.13.0",
+    "@types/node": "^14.14.6",
+    "@types/vinyl": "^2.0.4",
+    "@typescript-eslint/eslint-plugin": "^4.6.0",
+    "@typescript-eslint/parser": "^4.6.0",
+    "del": "^6.0.0",
+    "eslint": "^7.12.1",
+    "gulp": "^4.0.2",
+    "gulp-run": "^1.7.1",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "gulpclass": "^0.2.0",
+    "ts-node": "git+https://github.com/TypeStrong/ts-node.git",
+    "typescript": "^4.0.5"
   }
 }
