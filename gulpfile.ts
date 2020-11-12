@@ -119,14 +119,9 @@ export class Gulpfile {
      */
     @gulpclass.Task("includes:docs")
     public includeTask(): unknown {
-        return Promise.all([
-            gulp.src(["README.md"], {cwd: __dirname})
-                // write to target build directory
-                .pipe(gulp.dest(this.target)),
-            gulp.src(["LICENSE"], {cwd: __dirname})
-                // write to target build directory
-                .pipe(gulp.dest(this.target)),
-        ]);
+        return gulp.src(["README.md", "LICENSE", "yarn.lock"], {cwd: __dirname})
+            // write to target build directory
+            .pipe(gulp.dest(this.target));
     }
 
     /**

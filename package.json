@@ -6,8 +6,8 @@
   "license": "MIT",
   "repository": "https://github.com/concision/esm-loader-chaining-polyfill.git",
   "type": "module",
-  "main": "dist/tla.js",
-  "typings": "dist/index.d.ts",
+  "main": "./dist/tla.js",
+  "typings": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/tla.js",
     "./tla": "./dist/tla.js",
@@ -26,7 +26,8 @@
     "lint": "eslint --config .eslintrc.json --ext .ts --color gulpfile.ts src",
     "build": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --gulpfile gulpfile.ts build",
     "build:dev": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --gulpfile gulpfile.ts build:dev",
-    "prepack": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --gulpfile gulpfile.ts prepack"
+    "prepack": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --gulpfile gulpfile.ts prepack",
+    "publish": "yarn run prepack && cd dist && yarn npm publish"
   },
   "devDependencies": {
     "@types/del": "^4.0.0",
