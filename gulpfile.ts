@@ -39,23 +39,21 @@ export class Gulpfile {
      */
     private readonly target: string = resolve(__dirname, this.project.config.compilerOptions.outDir);
 
+    /**
+     * Indicates task is GitHub related
+     * @private
+     */
+    private github = false;
+
 
     // grouped tasks
-
-    /**
-     * Build project without linting
-     */
-    @gulpclass.SequenceTask("build:dev")
-    public buildDevTask(): string[] {
-        return ["clean", "transpile", "includes:typings"];
-    }
 
     /**
      * Build project
      */
     @gulpclass.SequenceTask("build")
     public buildTask(): string[] {
-        return ["clean", "lint", "transpile", "includes:typings"];
+        return ["clean", "transpile", "includes:typings"];
     }
 
     /**
@@ -63,7 +61,16 @@ export class Gulpfile {
      */
     @gulpclass.SequenceTask("prepack")
     public prepackTask(): string[] {
-        return ["build", "includes:docs", "package"];
+        return ["lint", "build", "includes:docs", "includes:yarnrc", "package"];
+    }
+
+    /**
+     * Build project and prepare for npm publish on the GitHub registry
+     */
+    @gulpclass.SequenceTask("prepack:github")
+    public prepackGithubTask(): string[] {
+        this.github = true;
+        return ["lint", "build", "includes:docs", "includes:yarnrc", "package"];
     }
 
 
@@ -115,21 +122,31 @@ export class Gulpfile {
     }
 
     /**
+     * Copy module typings to distributed files
+     */
+    @gulpclass.Task("includes:typings")
+    public includeTypingsTask(): unknown {
+        return gulp.src(["index.d.ts"], {cwd: this.root})
+            // write to target build directory
+            .pipe(gulp.dest(this.target));
+    }
+
+    /**
      * Copy README.md and LICENSE files to distributed files
      */
     @gulpclass.Task("includes:docs")
-    public includeTask(): unknown {
+    public includeDocsTask(): unknown {
         return gulp.src(["README.md", "LICENSE", "yarn.lock"], {cwd: __dirname})
             // write to target build directory
             .pipe(gulp.dest(this.target));
     }
 
     /**
-     * Copy module typings to distributed files
+     * Copy README.md and LICENSE files to distributed files
      */
-    @gulpclass.Task("includes:typings")
-    public includeTypingsTask(): unknown {
-        return gulp.src(["**/index.d.ts"], {cwd: this.root})
+    @gulpclass.Task("includes:yarnrc")
+    public includeYarnrcTask(): unknown {
+        return gulp.src([".yarnrc.yml"], {cwd: __dirname})
             // write to target build directory
             .pipe(gulp.dest(this.target));
     }
@@ -141,6 +158,13 @@ export class Gulpfile {
     public async packageTask(): Promise<void> {
         // read package.json
         const packageJson = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf8"));
+
+        // preprocess 'name' to have scope
+        if (this.github) {
+            const match = /^(?:https:\/\/github\.com\/|git@github\.com:)(?<scope>[^/]+)\/(?<name>[^/]+)\.git$/.exec(packageJson["repository"]);
+            if (match == null) throw new TypeError("package.json repository URL does not match github.com");
+            packageJson["name"] = `@${match.groups!.scope}/${match.groups!.name}`;
+        }
 
         // delete unnecessary tags
         delete packageJson["scripts"];

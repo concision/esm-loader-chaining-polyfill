@@ -22,12 +22,13 @@
     "README.md"
   ],
   "scripts": {
-    "clean": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --gulpfile gulpfile.ts clean",
+    "clean": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color clean",
     "lint": "eslint --config .eslintrc.json --ext .ts --color gulpfile.ts src",
-    "build": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --gulpfile gulpfile.ts build",
-    "build:dev": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --gulpfile gulpfile.ts build:dev",
-    "prepack": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color --gulpfile gulpfile.ts prepack",
-    "publish": "yarn run prepack && cd dist && yarn npm publish"
+    "build": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color build",
+    "prepack": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color prepack",
+    "prepack:github": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm/transpile-only' gulp --color prepack:github",
+    "publish": "yarn run prepack && cd dist && yarn npm publish",
+    "publish:github": "yarn run prepack:github && cd dist && yarn npm publish"
   },
   "devDependencies": {
     "@types/del": "^4.0.0",
