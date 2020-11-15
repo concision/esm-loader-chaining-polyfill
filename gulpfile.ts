@@ -61,7 +61,7 @@ export class Gulpfile {
      */
     @gulpclass.SequenceTask("prepack")
     public prepackTask(): string[] {
-        return ["lint", "build", "includes:docs", "includes:yarnrc", "package"];
+        return ["lint", "build", "includes:docs", "package"];
     }
 
     /**
@@ -70,7 +70,7 @@ export class Gulpfile {
     @gulpclass.SequenceTask("prepack:github")
     public prepackGithubTask(): string[] {
         this.github = true;
-        return ["lint", "build", "includes:docs", "includes:yarnrc", "package"];
+        return ["lint", "build", "includes:docs", "package"];
     }
 
 
@@ -137,16 +137,6 @@ export class Gulpfile {
     @gulpclass.Task("includes:docs")
     public includeDocsTask(): unknown {
         return gulp.src(["README.md", "LICENSE", "yarn.lock"], {cwd: __dirname})
-            // write to target build directory
-            .pipe(gulp.dest(this.target));
-    }
-
-    /**
-     * Copy README.md and LICENSE files to distributed files
-     */
-    @gulpclass.Task("includes:yarnrc")
-    public includeYarnrcTask(): unknown {
-        return gulp.src([".yarnrc.yml"], {cwd: __dirname})
             // write to target build directory
             .pipe(gulp.dest(this.target));
     }
