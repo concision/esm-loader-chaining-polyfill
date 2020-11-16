@@ -1,0 +1,93 @@
+name: "Continuous Delivery"
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    name: "Lint, Build, and Publish (Node.js v14)"
+    runs-on: ubuntu-18.04
+    env:
+      NODE_ENV: "production"
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v2
+
+      - name: "Cache NPM Modules"
+        id: yarn_cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/.yarn/cache
+            **/.yarn/unplugged
+            **/.yarn/install-state.gz
+            **/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: "Setup Node.js v14"
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14"
+
+      - name: "Install NPM Dependencies"
+        if: steps.yarn_cache.outputs.cache-hit != 'true'
+        run: "yarn install --immutable"
+
+      - name: "Verify Git Tag with package.json"
+        run: "yarn run verify:version --tag=${{ github.ref }}"
+
+      - name: "ESLint Sources"
+        run: "yarn run lint"
+
+
+      - name: "Compile NPM Package"
+        run: "yarn run pack:npm"
+
+      - name: "Upload Package Artifact"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "esm-loader-chaining-polyfill.tgz"
+          path: "dist/esm-loader-chaining-polyfill.tgz"
+
+      - name: "Create Release"
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: "${{ github.ref }}"
+          draft: false
+          prerelease: false
+
+      - name: "Upload Release Asset"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "dist/esm-loader-chaining-polyfill.tgz"
+          asset_name: "esm-loader-chaining-polyfill.tgz"
+          asset_content_type: application/gzip
+
+      - name: "Publish to NPM Registry"
+        run: yarn npm publish --tolerate-republish
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          YARN_NPM_PUBLISH_REGISTRY: "https://registry.npmjs.org/"
+        working-directory: "dist"
+
+
+      - name: "Compile GitHub NPM Package"
+        run: "yarn run prepack:github"
+
+      - name: "Publish to GitHub NPM Registry"
+        run: yarn npm publish --tolerate-republish
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          YARN_NPM_PUBLISH_REGISTRY: "https://npm.pkg.github.com/"
+        working-directory: "dist"
