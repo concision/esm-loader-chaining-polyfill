@@ -1694,7 +1694,7 @@ __metadata:
     gulp-sourcemaps: ^2.6.5
     gulp-typescript: ^6.0.0-alpha.1
     gulpclass: ^0.2.0
-    ts-node: "git+https://github.com/TypeStrong/ts-node.git"
+    ts-node: ^9.0.0
     typescript: ^4.0.5
   languageName: unknown
   linkType: soft
@@ -5017,9 +5017,9 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"ts-node@git+https://github.com/TypeStrong/ts-node.git":
+"ts-node@npm:^9.0.0":
   version: 9.0.0
-  resolution: "ts-node@git+https://github.com/TypeStrong/ts-node.git#commit=d0468792ebbbd16eb62755124d5be22223ab2ba8"
+  resolution: "ts-node@npm:9.0.0"
   dependencies:
     arg: ^4.1.0
     diff: ^4.0.1
@@ -5033,7 +5033,7 @@ fsevents@~2.1.2:
     ts-node-script: dist/bin-script.js
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
-  checksum: d339b4701122c266c89e93253ebeda244f4a79bda2a5921338fb28def02775a138eb3397245157d926d0282164ed9829caf654e1ace6db03944c6694b263e94d
+  checksum: 49d2ab087fc4b93f0a292e426ea6d242a80d1a4809ac008758bb0170aea1a85cd4182792c1d70889285fe5328cd8bd1ffb1e5108d1c4f31c39dbe9151ea4cabe
   languageName: node
   linkType: hard
 
