@@ -1,0 +1,45 @@
+name: "Continuous Integration"
+
+on: [ "push", "pull_request" ]
+
+jobs:
+  build:
+    name: "Lint & Build"
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        node-version: [ "12", "14" ]
+    env:
+      NODE_ENV: "production"
+      CI: true
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v2
+      - name: "Cache NPM Modules"
+        id: yarn-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/.yarn/cache
+            **/.yarn/unplugged
+            **/.yarn/install-state.gz
+            **/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: "Setup Node.js v${{ matrix.node-version }}"
+        uses: actions/setup-node@v1
+        with:
+          node-version: "${{ matrix.node-version }}"
+      - name: "Install Yarn"
+        run: "npm install -g yarn"
+      - name: "Install NPM Dependencies"
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: "yarn install --immutable"
+      - name: "ESLint Sources"
+        run: "yarn lint"
+      - name: "Compile Package"
+        run: "yarn run prepack"
+      - name: "Pack Package"
+        run: "yarn pack"
+        working-directory: "dist"
