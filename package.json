@@ -41,7 +41,6 @@
     "del": "^6.0.0",
     "eslint": "^7.12.1",
     "gulp": "^4.0.2",
-    "gulp-run": "^1.7.1",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulpclass": "^0.2.0",
