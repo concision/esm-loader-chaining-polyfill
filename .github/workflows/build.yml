@@ -41,11 +41,7 @@ jobs:
         run: "yarn lint"
 
       - name: "Compile Package"
-        run: "yarn run prepack"
-
-      - name: "Pack Package"
-        run: "yarn pack --out esm-loader-chaining-polyfill.tgz"
-        working-directory: "dist"
+        run: "yarn run pack:npm"
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v2

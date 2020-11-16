@@ -59,18 +59,18 @@ export class Gulpfile {
     /**
      * Build project and prepare for npm publish
      */
-    @gulpclass.SequenceTask("prepack")
+    @gulpclass.SequenceTask("pack:npm")
     public prepackTask(): string[] {
-        return ["lint", "build", "includes:docs", "package"];
+        return ["build", "includes:docs", "package"];
     }
 
     /**
      * Build project and prepare for npm publish on the GitHub registry
      */
-    @gulpclass.SequenceTask("prepack:github")
+    @gulpclass.SequenceTask("pack:github")
     public prepackGithubTask(): string[] {
         this.github = true;
-        return ["lint", "build", "includes:docs", "package"];
+        return ["build", "includes:docs", "package"];
     }
 
 
@@ -82,14 +82,6 @@ export class Gulpfile {
     @gulpclass.Task("clean")
     public cleanTask(): Promise<unknown> {
         return del(this.target);
-    }
-
-    /**
-     * Lint source files
-     */
-    @gulpclass.Task("lint")
-    public lintTask(): void {
-        return run("yarn run lint", {cwd: __dirname, verbosity: 3}).exec();
     }
 
     /**
