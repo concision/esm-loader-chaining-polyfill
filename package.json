@@ -27,8 +27,10 @@
     "lint": "eslint --config .eslintrc.json --ext .ts --color gulpfile.ts src",
     "build": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color build",
     "prepack": "yarn run build",
-    "pack:npm": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color pack:npm && cd dist && yarn pack --out esm-loader-chaining-polyfill.tgz",
-    "pack:github": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color pack:github && cd dist && yarn pack --out esm-loader-chaining-polyfill.tgz"
+    "prepack:npm": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color prepack:npm",
+    "pack:npm": "yarn run prepack:npm && cd dist && yarn pack --out esm-loader-chaining-polyfill.tgz",
+    "prepack:github": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color prepack:github",
+    "pack:github": "yarn run prepack:github && cd dist && yarn pack --out esm-loader-chaining-polyfill.tgz"
   },
   "devDependencies": {
     "@types/del": "^4.0.0",

@@ -58,7 +58,7 @@ export class Gulpfile {
     /**
      * Build project and prepare for npm publish
      */
-    @gulpclass.SequenceTask("pack:npm")
+    @gulpclass.SequenceTask("prepack:npm")
     public prepackTask(): string[] {
         return ["build", "includes:docs", "includes:npmignore", "package"];
     }
@@ -66,7 +66,7 @@ export class Gulpfile {
     /**
      * Build project and prepare for npm publish on the GitHub registry
      */
-    @gulpclass.SequenceTask("pack:github")
+    @gulpclass.SequenceTask("prepack:github")
     public prepackGithubTask(): string[] {
         this.github = true;
         return ["build", "includes:docs", "includes:npmignore", "package"];
