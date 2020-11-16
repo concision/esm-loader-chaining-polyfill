@@ -4,7 +4,7 @@ on: [ "push", "pull_request" ]
 
 jobs:
   build:
-    name: "Lint & Build (Node.js v${{ matrix.node }})"
+    name: "Lint & Build (Node.js v${{ matrix.node-version }})"
     runs-on: ubuntu-18.04
     strategy:
       matrix:
