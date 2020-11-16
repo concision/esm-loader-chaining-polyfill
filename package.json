@@ -22,11 +22,11 @@
     "README.md"
   ],
   "scripts": {
-    "clean": "NODE_OPTIONS='--no-warnings ---loader=./lib/ts-node-esm-fix.mjs' gulp --color clean",
+    "clean": "NODE_OPTIONS='--no-warnings ---loader=ts-node/esm' gulp --color clean",
     "lint": "eslint --config .eslintrc.json --ext .ts --color gulpfile.ts src",
-    "build": "NODE_OPTIONS='--no-warnings --loader=./lib/ts-node-esm-fix.mjs' gulp --color build",
-    "prepack": "NODE_OPTIONS='--no-warnings --loader=./lib/ts-node-esm-fix.mjs' gulp --color prepack",
-    "prepack:github": "NODE_OPTIONS='--no-warnings --loader=./lib/ts-node-esm-fix.mjs' gulp --color prepack:github",
+    "build": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color build",
+    "prepack": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color prepack",
+    "prepack:github": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color prepack:github",
     "publish": "yarn run prepack && cd dist && yarn npm publish",
     "publish:github": "yarn run prepack:github && cd dist && yarn npm publish"
   },
@@ -46,7 +46,7 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulpclass": "^0.2.0",
-    "ts-node": "^9.0.0",
+    "ts-node": "file:./lib/ts-node-packed.tgz",
     "typescript": "^4.0.5"
   }
 }

@@ -1694,7 +1694,7 @@ __metadata:
     gulp-sourcemaps: ^2.6.5
     gulp-typescript: ^6.0.0-alpha.1
     gulpclass: ^0.2.0
-    ts-node: ^9.0.0
+    ts-node: "file:./lib/ts-node-packed.tgz"
     typescript: ^4.0.5
   languageName: unknown
   linkType: soft
@@ -5017,9 +5017,9 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^9.0.0":
+"ts-node@file:./lib/ts-node-packed.tgz::locator=esm-loader-chaining-polyfill%40workspace%3A.":
   version: 9.0.0
-  resolution: "ts-node@npm:9.0.0"
+  resolution: "ts-node@file:./lib/ts-node-packed.tgz::locator=esm-loader-chaining-polyfill%40workspace%3A."
   dependencies:
     arg: ^4.1.0
     diff: ^4.0.1
@@ -5033,7 +5033,7 @@ fsevents@~2.1.2:
     ts-node-script: dist/bin-script.js
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
-  checksum: 49d2ab087fc4b93f0a292e426ea6d242a80d1a4809ac008758bb0170aea1a85cd4182792c1d70889285fe5328cd8bd1ffb1e5108d1c4f31c39dbe9151ea4cabe
+  checksum: 56172763e499409fb96865f0425469b439ab1567ce3a0a9ecc465db0287f17f07764a94da23ca6a615e22e38825f4bf01bd28bb17025d26b493b274da90dffb2
   languageName: node
   linkType: hard
 
