@@ -75,6 +75,44 @@ export class Gulpfile {
 
     // individual tasks
 
+    @gulpclass.Task("verify:version")
+    public verifyVersionTask(): Promise<unknown> {
+        // read --tag argument
+        const lastArg: string | undefined = process.argv.filter((arg: string) => arg.startsWith("--tag="))?.[0];
+        if (typeof lastArg === "undefined") {
+            throw new Error(`no passed tag to verify`);
+        }
+
+        // validate tag is in the form of 'v...'
+        const versionTag: string | undefined = lastArg.match(/^--tag=v(.+)$/)?.[1];
+        if (typeof versionTag === "undefined") {
+            throw new Error(`passed tag is not in the form of 'v...': ${lastArg}`);
+        }
+
+
+        // source: https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+        const semverRegex = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
+
+        // verify semver compliance of passed tag
+        if (versionTag.match(semverRegex) === null) {
+            throw new Error(`passed tag is not semver compliant: ${versionTag}`);
+        }
+
+        // read package.json
+        const packageVersion: string = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf8"))["version"];
+        // verify semver compliance of version
+        if (packageVersion.match(semverRegex) === null) {
+            throw new Error(`package.json version is not semver compliant: ${packageVersion}`);
+        }
+
+        // verify tags match
+        if (versionTag !== packageVersion) {
+            throw new Error(`passed tag (${versionTag}) and package.json version (${packageVersion}) do not match`);
+        }
+
+        return Promise.resolve();
+    }
+
     /**
      * Delete {@link target} directory
      */
