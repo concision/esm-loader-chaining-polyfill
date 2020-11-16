@@ -4,7 +4,7 @@ on: [ "push", "pull_request" ]
 
 jobs:
   build:
-    name: "Lint & Build"
+    name: "Lint & Build (Node.js v${{ matrix.node }})"
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -14,6 +14,7 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@v2
+
       - name: "Cache NPM Modules"
         id: yarn-cache
         uses: actions/cache@v2
@@ -26,19 +27,31 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+
       - name: "Setup Node.js v${{ matrix.node-version }}"
         uses: actions/setup-node@v1
         with:
           node-version: "${{ matrix.node-version }}"
+
       - name: "Install Yarn"
         run: "npm install -g yarn"
+
       - name: "Install NPM Dependencies"
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: "yarn install --immutable"
+
       - name: "ESLint Sources"
         run: "yarn lint"
+
       - name: "Compile Package"
         run: "yarn run prepack"
+
       - name: "Pack Package"
-        run: "yarn pack"
+        run: "yarn pack --out esm-loader-chaining-polyfill.tgz"
         working-directory: "dist"
+
+      - name: "Upload Artifact"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "esm-loader-chaining-polyfill.tgz"
+          path: "dist/esm-loader-chaining-polyfill.tgz"
