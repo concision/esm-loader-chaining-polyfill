@@ -38,12 +38,6 @@ export class Gulpfile {
      */
     private readonly target: string = resolve(__dirname, this.project.config.compilerOptions.outDir);
 
-    /**
-     * Indicates task is GitHub related
-     * @private
-     */
-    private github = false;
-
 
     // grouped tasks
 
@@ -68,8 +62,7 @@ export class Gulpfile {
      */
     @gulpclass.SequenceTask("prepack:github")
     public prepackGithubTask(): string[] {
-        this.github = true;
-        return ["build", "includes:docs", "includes:npmignore", "package"];
+        return ["build", "includes:docs", "includes:npmignore", "package:github"];
     }
 
 
@@ -184,12 +177,12 @@ export class Gulpfile {
      * Copy stripped package.json to distributed files
      */
     @gulpclass.Task("package")
-    public async packageTask(): Promise<void> {
+    public async packageTask(github: boolean = false): Promise<void> {
         // read package.json
         const packageJson = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf8"));
 
         // preprocess 'name' to have scope
-        if (this.github) {
+        if (github) {
             const match = /^(?:https:\/\/github\.com\/|git@github\.com:)(?<scope>[^/]+)\/(?<name>[^/]+)\.git$/.exec(packageJson["repository"]);
             if (match == null) throw new TypeError("package.json repository URL does not match github.com");
             packageJson["name"] = `@${match.groups!.scope}/${match.groups!.name}`;
@@ -214,5 +207,13 @@ export class Gulpfile {
             resolve(this.target, "package.json"),
             JSON.stringify(packageJson, null, "  "),
         );
+    }
+
+    /**
+     * Copy stripped package.json to distributed files
+     */
+    @gulpclass.Task("package:github")
+    public packageGithubTask(): Promise<void> {
+        return this.packageTask(true);
     }
 }
