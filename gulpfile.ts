@@ -63,7 +63,7 @@ export class Gulpfile {
      */
     @gulpclass.SequenceTask("prepack:github")
     public prepackGithubTask(): string[] {
-        return ["build", "includes:docs", "includes:yarn", "package:github"];
+        return ["build", "includes:docs", "includes:yarn", "package:github", "yarn:install"];
     }
 
 
@@ -192,6 +192,8 @@ export class Gulpfile {
         // delete unnecessary tags
         delete packageJson["scripts"];
         delete packageJson["files"];
+        // delete ts-node dependency due to local .tgz install
+        delete packageJson["devDependencies"]["ts-node"];
 
         // relink 'dist' references
         packageJson["main"] = packageJson["main"]?.replace("dist/", "");
