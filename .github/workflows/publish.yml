@@ -47,6 +47,9 @@ jobs:
       - name: "Compile NPM Package"
         run: "yarn run pack:npm"
 
+      - name: "Test Build"
+        run: "yarn test"
+
       - name: "Upload Package Artifact"
         uses: actions/upload-artifact@v2
         with:

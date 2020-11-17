@@ -46,6 +46,9 @@ jobs:
       - name: "ESLint Sources"
         run: "yarn lint"
 
+      - name: "Test Build"
+        run: "yarn test"
+
       - name: "Compile Package"
         run: "yarn run pack:npm"
 

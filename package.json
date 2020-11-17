@@ -26,6 +26,7 @@
     "clean": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color clean",
     "lint": "eslint --config .eslintrc.json --ext .ts --color gulpfile.ts src",
     "build": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color build",
+    "test": "",
     "prepack": "yarn run build",
     "prepack:npm": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color prepack:npm",
     "pack:npm": "yarn run prepack:npm && cd dist && yarn pack --out esm-loader-chaining-polyfill.tgz",
