@@ -1,7 +1,7 @@
 {
   "name": "esm-loader-chaining-polyfill",
   "version": "0.1.0",
-  "description": "Enable chaining multiple Node.js ESM '--experimental-loader's",
+  "description": "A Node.js polyfill of @devsnek's \"esm: loader chaining\" proposal for chaining several cooperative experimental EcmaScript module loaders.",
   "author": "Concision <contact@concision.me>",
   "license": "MIT",
   "repository": "https://github.com/concision/esm-loader-chaining-polyfill.git",
