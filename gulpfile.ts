@@ -54,7 +54,7 @@ export class Gulpfile {
      */
     @gulpclass.SequenceTask("prepack:npm")
     public prepackTask(): string[] {
-        return ["build", "includes:docs", "includes:npmignore", "package"];
+        return ["build", "includes:docs", "includes:yarn", "package"];
     }
 
     /**
@@ -62,7 +62,7 @@ export class Gulpfile {
      */
     @gulpclass.SequenceTask("prepack:github")
     public prepackGithubTask(): string[] {
-        return ["build", "includes:docs", "includes:npmignore", "package:github"];
+        return ["build", "includes:docs", "includes:yarn", "package:github"];
     }
 
 
@@ -158,7 +158,7 @@ export class Gulpfile {
      */
     @gulpclass.Task("includes:docs")
     public includeDocsTask(): unknown {
-        return gulp.src(["README.md", "LICENSE", "yarn.lock"], {cwd: __dirname})
+        return gulp.src(["README.md", "LICENSE"], {cwd: __dirname})
             // write to target build directory
             .pipe(gulp.dest(this.target));
     }
@@ -166,9 +166,9 @@ export class Gulpfile {
     /**
      * Copy .npmignore to {@link #target} directory
      */
-    @gulpclass.Task("includes:npmignore")
+    @gulpclass.Task("includes:yarn")
     public includeNpmIgnoreTask(): unknown {
-        return gulp.src([".npmignore"], {cwd: __dirname})
+        return gulp.src(["yarn.lock", ".npmignore"], {cwd: __dirname})
             // write to target build directory
             .pipe(gulp.dest(this.target));
     }
