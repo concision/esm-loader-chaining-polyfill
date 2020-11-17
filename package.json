@@ -5,6 +5,9 @@
   "author": "Concision <contact@concision.me>",
   "license": "MIT",
   "repository": "https://github.com/concision/esm-loader-chaining-polyfill.git",
+  "engines": {
+    "node": ">=12.0.0"
+  },
   "type": "module",
   "main": "./dist/tla.js",
   "typings": "./dist/index.d.ts",
