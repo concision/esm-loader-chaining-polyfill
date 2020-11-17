@@ -83,10 +83,10 @@ export class Gulpfile {
             throw new Error(`no passed tag to verify`);
         }
 
-        // validate tag is in the form of 'v...'
-        const versionTag: string | undefined = lastArg.match(/^--tag=v(.+)$/)?.[1];
+        // validate tag is in the form of '--tag=refs/tags/v...'
+        const versionTag: string | undefined = lastArg.match(/^--tag=refs\/tags\/v(.+)$/)?.[1];
         if (typeof versionTag === "undefined") {
-            throw new Error(`passed tag is not in the form of 'v...': ${lastArg}`);
+            throw new Error(`passed tag is not in the form of '--tag=refs/tags/v...': ${lastArg}`);
         }
 
 
