@@ -53,6 +53,13 @@ jobs:
           name: "esm-loader-chaining-polyfill.tgz"
           path: "dist/esm-loader-chaining-polyfill.tgz"
 
+      - name: "Publish to NPM Registry"
+        run: yarn npm publish --tolerate-republish
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          YARN_NPM_PUBLISH_REGISTRY: "https://registry.npmjs.org/"
+        working-directory: "dist"
+
       - name: "Create Release"
         id: create_release
         uses: actions/create-release@v1
@@ -73,21 +80,3 @@ jobs:
           asset_path: "dist/esm-loader-chaining-polyfill.tgz"
           asset_name: "esm-loader-chaining-polyfill.tgz"
           asset_content_type: application/gzip
-
-      - name: "Publish to NPM Registry"
-        run: yarn npm publish --tolerate-republish
-        env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-          YARN_NPM_PUBLISH_REGISTRY: "https://registry.npmjs.org/"
-        working-directory: "dist"
-
-
-      - name: "Compile GitHub NPM Package"
-        run: "yarn run prepack:github"
-
-      - name: "Publish to GitHub NPM Registry"
-        run: yarn npm publish --tolerate-republish
-        env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          YARN_NPM_PUBLISH_REGISTRY: "https://npm.pkg.github.com/"
-        working-directory: "dist"
