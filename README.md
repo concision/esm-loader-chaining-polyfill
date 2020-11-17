@@ -86,7 +86,8 @@ There are two ESM loaders provided by this library with important distinctions o
 
 ## Example ESM Loaders
 - npm package [`ts-node`](https://github.com/TypeStrong/ts-node): "TypeScript execution and REPL for node.js" (see [TypeStrong/ts-node#1007: "ESM support: soliciting feedback"](https://github.com/TypeStrong/ts-node/issues/1007)).
-- [GeoffreyBooth/node-loaders](https://github.com/GeoffreyBooth/node-loaders): "Examples demonstrating the Node.js ECMAScript Modules Loaders API "
+- [GeoffreyBooth/node-loaders](https://github.com/GeoffreyBooth/node-loaders): "Examples demonstrating the Node.js ECMAScript Modules Loaders API"
+- npm package [`autoesm`](https://www.npmjs.com/package/autoesm): "Import ESM in node@13+ based on source, not package.json"
 
 
 ## Implementation Details
