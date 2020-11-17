@@ -2,6 +2,7 @@ import gulp from "gulp";
 import gulpclass from "gulpclass";
 import typescript, {Project} from "gulp-typescript";
 import del from "del";
+import run from "gulp-run";
 import {dirname, join, resolve} from "path";
 import {readFileSync, writeFileSync} from "fs";
 import File from "vinyl";
