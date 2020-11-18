@@ -54,7 +54,7 @@ export class Gulpfile {
      */
     @gulpclass.SequenceTask("prepack:npm")
     public prepackTask(): string[] {
-        return ["build", "includes:docs", "includes:yarn", "package"];
+        return ["build", "includes:docs", "includes:yarn", "package:npm"];
     }
 
     /**
@@ -176,7 +176,6 @@ export class Gulpfile {
     /**
      * Copy stripped package.json to distributed files
      */
-    @gulpclass.Task("package")
     public async packageTask(github: boolean = false): Promise<void> {
         // read package.json
         const packageJson = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf8"));
@@ -213,6 +212,14 @@ export class Gulpfile {
 
     /**
      * Copy stripped package.json to distributed files
+     */
+    @gulpclass.Task("package:npm")
+    public async packageNpmTask(): Promise<void> {
+        return this.packageTask(false);
+    }
+
+    /**
+     * Copy stripped GitHub-scoped package.json to distributed files
      */
     @gulpclass.Task("package:github")
     public packageGithubTask(): Promise<void> {
