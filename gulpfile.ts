@@ -5,7 +5,7 @@ import del from "del";
 import {dirname, join, resolve} from "path";
 import {readFileSync, writeFileSync} from "fs";
 import File from "vinyl";
-import sourcemaps from "gulp-sourcemaps";
+import sourcemaps, {WriteOptions} from "gulp-sourcemaps";
 import {URL} from "url";
 
 declare module "gulp-sourcemaps" {
@@ -129,12 +129,12 @@ export class Gulpfile {
         ]
             // exclude gulpfile.ts
             .filter(source => !source.includes("gulpfile.ts"));
-
         return gulp.src(sources, {allowEmpty: true, base: this.root})
             .pipe(sourcemaps.init({loadMaps: true}))
             // transpile TypeScript sources
             .pipe(this.project())
-            .pipe(sourcemaps.write(this.target, {
+            // compile sourcemaps
+            .pipe(sourcemaps.write("", {
                 addComment: true,
                 includeContent: false,
                 sourceMappingURL: (file: File) => `${file.basename}.map`,
