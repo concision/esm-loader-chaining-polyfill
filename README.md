@@ -10,9 +10,6 @@
     <a href="https://www.npmjs.com/package/esm-loader-chaining-polyfill">
         <img alt="npm package: esm-loader-chaining-polyfill" src="https://img.shields.io/npm/v/esm-loader-chaining-polyfill?color=red&logo=npm&style=for-the-badge"/>
     </a>
-    <a href="https://bundlephobia.com/result?p=esm-loader-chaining-polyfill">
-        <img alt="bundlephobia: esm-loader-chaining-polyfill" src="https://img.shields.io/bundlephobia/min/esm-loader-chaining-polyfill?color=green&label=Size&logo=node.js&logoColor=green&style=for-the-badge"/>
-    </a>
 </p>
 
 <p align="center">
