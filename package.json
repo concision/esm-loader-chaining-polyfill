@@ -39,9 +39,7 @@
     "test": "",
     "prepack": "yarn run build",
     "prepack:npm": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color prepack:npm",
-    "pack:npm": "yarn run prepack:npm && cd dist && yarn pack --out esm-loader-chaining-polyfill.tgz",
-    "prepack:github": "NODE_OPTIONS='--no-warnings --loader=ts-node/esm' gulp --color prepack:github",
-    "pack:github": "yarn run prepack:github && cd dist && yarn pack --out esm-loader-chaining-polyfill.tgz"
+    "pack:npm": "yarn run prepack:npm && cd dist && yarn pack --out esm-loader-chaining-polyfill.tgz"
   },
   "devDependencies": {
     "@types/del": "^4.0.0",
