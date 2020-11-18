@@ -6,7 +6,9 @@
     <a href="https://github.com/concision/esm-loader-chaining-polyfill/blob/master/LICENSE">
         <img alt="repository license" src="https://img.shields.io/github/license/concision/esm-loader-chaining-polyfill?style=for-the-badge"/>
     </a>
-    <img alt="Node.js engine compatibility" src="https://img.shields.io/node/v/esm-loader-chaining-polyfill?color=green&logo=node.js&logoColor=green&style=for-the-badge"/>
+    <a href="https://github.com/concision/esm-loader-chaining-polyfill/blob/master/package.json">
+        <img alt="Node.js engine compatibility" src="https://img.shields.io/node/v/esm-loader-chaining-polyfill?color=green&logo=node.js&logoColor=green&style=for-the-badge"/>
+    </a>
     <a href="https://www.npmjs.com/package/esm-loader-chaining-polyfill">
         <img alt="npm package: esm-loader-chaining-polyfill" src="https://img.shields.io/npm/v/esm-loader-chaining-polyfill?color=red&logo=npm&style=for-the-badge"/>
     </a>
