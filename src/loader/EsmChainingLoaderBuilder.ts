@@ -13,14 +13,15 @@ import {
     Promise,
     PromiseResolve,
     StringPrototypeIndexOf,
+    StringPrototypeMatch,
     StringPrototypeStartsWith,
     StringPrototypeSubstring,
     URLPrototypeToString,
 } from "../internal/Primordials.js";
 import {ExtractedEsmLoaderHooks, newEsmLoaderFromHooks} from "./EsmChainingLoader.js";
 import {createRequire} from "module";
-import {resolve} from "path";
-import {pathToFileURL} from "url";
+import {dirname, isAbsolute, relative, resolve} from "path";
+import {fileURLToPath, pathToFileURL} from "url";
 import {parseNodeOptions} from "../internal/NodeOptions.js";
 
 
@@ -78,15 +79,32 @@ export function createEsmLoader({async}: { async: boolean }): EsmLoaderHook | Pr
         transformSource: [],
     };
 
+    // self library directory
+    let selfDirectory: string | undefined = undefined;
+    try {
+        selfDirectory = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+    } catch {
+    }
     // create a CommonJS require import function in the current working directory
     const currentWorkingDirectory: string = process.cwd();
     const require = createRequire(currentWorkingDirectory);
+
     // synchronously import all CommonJS ESM loaders
     // note: any future invoked code may manipulate object prototypes - all code beyond here should invoke only primordials
     for (let i = 0; i < esmLoaderNames.length; i++) {
         let loaderName: string = esmLoaderNames[i];
+
+        // skip loader if it is part of the polyfill package
+        if (selfDirectory !== undefined) {
+            try {
+                const loaderPath: string = require.resolve(loaderName, {paths: [currentWorkingDirectory]});
+                const relativePath: string = relative(selfDirectory, loaderPath);
+                if (relativePath && !relativePath.startsWith("..") && !isAbsolute(relativePath)) continue;
+            } catch {
+            }
+        }
         // skip self ESM loader
-        if (loaderName === "esm-loader-chaining" || loaderName === "esm-loader-chaining/no-tla") continue;
+        if (StringPrototypeMatch(loaderName, /esm-loader-chaining-polyfill(([/\\]dist)?[/\\](no-)?tla(\.js)?)?$/) !== null) continue;
 
         let esmLoader;
         try { // CommonJS

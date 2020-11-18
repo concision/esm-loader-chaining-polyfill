@@ -22,6 +22,7 @@ export const ObjectValues = Object.values;
 export const Promise = global.Promise;
 export const PromiseResolve = Promise.resolve.bind(Promise);
 export const StringPrototypeIndexOf = uncurryThis(String.prototype.indexOf);
+export const StringPrototypeMatch = uncurryThis(String.prototype.match);
 export const StringPrototypeStartsWith = uncurryThis(String.prototype.startsWith);
 export const StringPrototypeSubstring = uncurryThis(String.prototype.substring);
 export const URLPrototypeToString = uncurryThis(URL.prototype.toString);
