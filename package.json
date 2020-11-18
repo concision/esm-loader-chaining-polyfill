@@ -1,6 +1,6 @@
 {
   "name": "esm-loader-chaining-polyfill",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Node.js polyfill of @devsnek's \"esm: loader chaining\" proposal for chaining several cooperative experimental EcmaScript module loaders.",
   "author": "Concision <contact@concision.me>",
   "license": "MIT",
