@@ -1,6 +1,6 @@
 {
   "name": "esm-loader-chaining-polyfill",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "description": "A Node.js polyfill of @devsnek's \"esm: loader chaining\" proposal for chaining several cooperative experimental EcmaScript module loaders.",
   "author": "Concision <contact@concision.me>",
   "license": "MIT",
@@ -55,7 +55,7 @@
     "gulp-sourcemaps": "^3.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulpclass": "^0.2.0",
-    "ts-node": "file:./lib/ts-node-packed.tgz",
+    "ts-node": "^9.1.1",
     "typescript": "^4.0.5"
   }
 }

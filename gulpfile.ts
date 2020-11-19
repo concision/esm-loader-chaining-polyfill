@@ -190,8 +190,6 @@ export class Gulpfile {
         // delete unnecessary tags
         delete packageJson["scripts"];
         delete packageJson["files"];
-        // delete ts-node dependency due to local .tgz install
-        delete packageJson["devDependencies"]["ts-node"];
 
         // relink 'dist' references
         packageJson["main"] = packageJson["main"]?.replace("dist/", "");

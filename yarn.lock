@@ -1159,6 +1159,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"create-require@npm:^1.1.0":
+  version: 1.1.1
+  resolution: "create-require@npm:1.1.1"
+  checksum: babd307893abfb26d77ae11cb9d6b6cfa6d18c9cee435cf70b5a3fb44aa8d90c9ec26ea89cbb16e0a94b8d34f5fcaee164b90ed526cdd3158955673ab9652d01
+  languageName: node
+  linkType: hard
+
 "cross-spawn@npm:^7.0.2":
   version: 7.0.3
   resolution: "cross-spawn@npm:7.0.3"
@@ -1605,7 +1612,7 @@ __metadata:
     gulp-sourcemaps: ^3.0.0
     gulp-typescript: ^6.0.0-alpha.1
     gulpclass: ^0.2.0
-    ts-node: "file:./lib/ts-node-packed.tgz"
+    ts-node: ^9.1.1
     typescript: ^4.0.5
   languageName: unknown
   linkType: soft
@@ -4646,11 +4653,12 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"ts-node@file:./lib/ts-node-packed.tgz::locator=esm-loader-chaining-polyfill%40workspace%3A.":
-  version: 9.0.0
-  resolution: "ts-node@file:./lib/ts-node-packed.tgz::locator=esm-loader-chaining-polyfill%40workspace%3A."
+"ts-node@npm:^9.1.1":
+  version: 9.1.1
+  resolution: "ts-node@npm:9.1.1"
   dependencies:
     arg: ^4.1.0
+    create-require: ^1.1.0
     diff: ^4.0.1
     make-error: ^1.1.1
     source-map-support: ^0.5.17
@@ -4662,7 +4670,7 @@ fsevents@~2.1.2:
     ts-node-script: dist/bin-script.js
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
-  checksum: 56172763e499409fb96865f0425469b439ab1567ce3a0a9ecc465db0287f17f07764a94da23ca6a615e22e38825f4bf01bd28bb17025d26b493b274da90dffb2
+  checksum: a90db4a342872cd0e7a80babdfcb15d2f7c06e700d735003098f7cc79db575c3380580c58a19ae0d0eaab553af083651d4237060c92170e6f8ac4e64693113ea
   languageName: node
   linkType: hard
 
