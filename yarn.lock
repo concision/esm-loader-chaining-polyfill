@@ -144,12 +144,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/gulp-sourcemaps@npm:^0.0.32":
-  version: 0.0.32
-  resolution: "@types/gulp-sourcemaps@npm:0.0.32"
+"@types/gulp-sourcemaps@npm:^0.0.33":
+  version: 0.0.33
+  resolution: "@types/gulp-sourcemaps@npm:0.0.33"
   dependencies:
     "@types/node": "*"
-  checksum: 89369561cbede9d88586f3b9d015092316039c59574c3a03dd971dd585f8860ce6f5f32e46c3717cf24468e7b5ca8fb2fa8f329b719623370235ed966cd8c16f
+    "@types/vinyl": "*"
+  checksum: 6767d4e88dcbb890639b9242aa5496e487c3e391df0da33245730a8b8158284f1d42e71156727bef39b620ebba30be01dff03e0eb3c17cd76523865e746a6fcb
   languageName: node
   linkType: hard
 
@@ -1601,7 +1602,7 @@ __metadata:
   dependencies:
     "@types/eslint": ^7
     "@types/gulp": ^4.0.7
-    "@types/gulp-sourcemaps": ^0.0.32
+    "@types/gulp-sourcemaps": ^0.0.33
     "@types/node": ^14.14.8
     "@types/vinyl": ^2.0.4
     "@typescript-eslint/eslint-plugin": ^4.8.1

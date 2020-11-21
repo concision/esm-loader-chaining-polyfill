@@ -8,12 +8,6 @@ import File from "vinyl";
 import sourcemaps, {WriteOptions} from "gulp-sourcemaps";
 import {URL} from "url";
 
-declare module "gulp-sourcemaps" {
-    export interface WriteOptions {
-        sourceMappingURL?(file: File): string;
-    }
-}
-
 
 const __dirname = join(dirname(decodeURI(new URL(import.meta.url).pathname))).replace(/^\\([A-Z]:\\)/, "$1");
 
